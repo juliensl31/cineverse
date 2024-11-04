@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Spinner from '../components/Spinner';
 import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
+import SearchBar from '../components/SearchBar';
 
 //Interface pour les données de films reçues de l'API TMDB
 interface Movie {
@@ -13,6 +14,9 @@ interface Movie {
   release_date: string; // Date de sortie du film
   vote_average: number; // Note moyenne du film
 }
+
+// Type pour le type de recherche
+type SearchType = 'movie' | 'tv' | 'person';
 
 // Composant principal de la page d'accueil
 const Home: NextPage = () => {
@@ -38,6 +42,21 @@ const Home: NextPage = () => {
 
     fetchMovies();
   }, []);
+
+  const handleSearch = async (query: string, type: SearchType) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/${type}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&query=${query}&page=1`
+      );
+      const data = await response.json();
+      setMovies(data.results);
+    } catch (error) {
+      console.error('Erreur:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -80,6 +99,11 @@ const Home: NextPage = () => {
             </p>
           </div>
         
+      {/* Ajout de la SearchBar */}
+      <div className="mt-8 mb-12">
+        <SearchBar onSearch={handleSearch} />
+      </div>
+
       {/* Affiche un spinner pendant le chargement, sinon la grille de films */}
       {loading ? (
         <div className="flex justify-center mt-12">
