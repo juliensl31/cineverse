@@ -254,7 +254,7 @@ export default function MoviePage() {
                             )}
 
                             {/* Informations */}    
-                            <div className="space-y-6">
+                            <div className={`space-y-6 ${!trailer ? 'w-full' : ''}`}>
                                 <div className="bg-white/5 rounded-2xl p-6 backdrop-blur-sm border border-white/10">
                                     <h3 className="text-2xl font-semibold text-white mb-6">Informations</h3>
                                     <div className="space-y-6">

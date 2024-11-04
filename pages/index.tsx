@@ -151,7 +151,7 @@ const Home: NextPage = () => {
           {/* Section Séries */}
           <section>
             <h2 className="text-3xl text-center font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 tracking-wide">
-              Séries Science-Fiction & Fantastique
+              Séries
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {series.map((series) => (
