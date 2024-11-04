@@ -8,7 +8,10 @@ module.exports = {
     extend: {
       colors: {
         primary: '#111827',
-      }
+      },
+      animation: {
+        'gradient-x': 'gradient-x 8s ease infinite',
+      },
     },
   },
   plugins: [],
