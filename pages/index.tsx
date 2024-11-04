@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Spinner from '../components/Spinner';
 
 const Home: NextPage = () => {
   return (

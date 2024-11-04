@@ -13,6 +13,7 @@
 
 # misc
 .DS_Store
+*.pem
 
 # local env files
 .env*.local
@@ -28,4 +29,6 @@ yarn-error.log*
 # Vercel
 .vercel
 
-*.pem
+# typescript
+*.tsbuildinfo
+next-env.d.ts
