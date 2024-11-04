@@ -2,69 +2,84 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Spinner from '../../components/Spinner';
 import Rated from '../../components/Rated';
+import Navigation from '../../components/Navigation';
 import Head from 'next/head';
 
-interface MovieDetails {
-    id: number;
-    title: string;
-    overview: string;
-    backdrop_path: string;
-    poster_path: string;
-    release_date: string;
-    runtime: number;
-    vote_average: number;
-    genres: { id: number; name: string; }[];
-    budget: number;
-    revenue: number;
-    videos: {
-        results: {
-            key: string;
-            type: string;
-            site: string;
+//Interface décrivant la structure des données d'un film
+ interface MovieDetails {
+    id: number;              // Identifiant unique du film
+    title: string;           // Titre du film
+    overview: string;        // Synopsis
+    backdrop_path: string;   // Chemin de l'image de fond
+    poster_path: string;     // Chemin de l'affiche
+    release_date: string;    // Date de sortie
+    runtime: number;         // Durée en minutes
+    vote_average: number;    // Note moyenne
+    genres: {               // Liste des genres
+        id: number;          // Identifiant unique du genre
+        name: string;        // Nom du genre   
+    }[];
+    budget: number;          // Budget du film
+    revenue: number;         // Recettes du film
+    videos: {               // Vidéos associées (bandes-annonces, etc.)
+        results: {          // Liste de vidéos
+            key: string;      // Clé de la vidéo
+            type: string;     // Type de la vidéo
+            site: string;     // Site hébergeant la vidéo
         }[];
     };
-    credits: {
-        cast: Array<{
-            id: number;
-            name: string;
-            character: string;
-            profile_path: string | null;
-            order: number;
-            popularity: number;
+    credits: {             // Distribution et équipe
+        cast: Array<{      // Acteurs
+            id: number;     // Identifiant unique de l'acteur
+            name: string;   // Nom de l'acteur
+            character: string; // Rôle joué
+            profile_path: string | null; // Chemin de l'affiche de l'acteur
+            order: number; // Ordre d'affichage
+            popularity: number; // Popularité de l'acteur
         }>;
-        crew: Array<{
-            id: number;
-            name: string;
-            job: string;
-            department: string;
-            profile_path: string | null;
-            popularity: number;
+        crew: Array<{      // Équipe technique
+            id: number;     // Identifiant unique de l'équipier
+            name: string;   // Nom de l'équipier
+            job: string;    // Fonction dans l'équipe
+            department: string; // Département
+            profile_path: string | null; // Chemin de l'affiche de l'équipier
+            popularity: number; // Popularité de l'équipier
         }>;
     };
-    recommendations: {
-        results: Array<{
-            id: number;
-            title: string;
-            poster_path: string | null;
-            vote_average: number;
-            release_date: string;
+    recommendations: {     // Films recommandés
+        results: Array<{     // Liste de films recommandés
+            id: number;       // Identifiant unique du film recommandé
+            title: string;   // Titre du film recommandé
+            poster_path: string | null; // Chemin de l'affiche du film recommandé
+            vote_average: number; // Note moyenne du film recommandé
+            release_date: string; // Date de sortie du film recommandé
         }>;
     };
 }
 
+// Composant principal de la page de détail d'un film
 export default function MoviePage() {
+    // États locaux
     const [movie, setMovie] = useState<MovieDetails | null>(null);
     const [loading, setLoading] = useState(true);
+    
+    // Router Next.js pour la navigation et récupération de l'ID
     const router = useRouter();
     const { id } = router.query;
 
+    // Effectue les appels API nécessaires lors du chargement de la page
     useEffect(() => {
         if (id) {
             setLoading(true);
+            // Appels API parallèles pour récupérer toutes les données
             Promise.all([
+                // Détails du film
                 fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR`),
+                // Vidéos (bandes-annonces)
                 fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`),
+                // Distribution et équipe
                 fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR`),
+                // Recommandations
                 fetch(`https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR`)
             ])
                 .then(([movieRes, videosRes, creditsRes, recommendationsRes]) =>
@@ -76,6 +91,7 @@ export default function MoviePage() {
                     ])
                 )
                 .then(([movieData, videosData, creditsData, recommendationsData]) => {
+                    // Fusion des données dans un seul objet
                     setMovie({
                         ...movieData,
                         videos: videosData,
@@ -91,10 +107,12 @@ export default function MoviePage() {
         }
     }, [id]);
 
+    // Recherche de la bande-annonce YouTube
     const trailer = movie?.videos?.results.find(
         video => video.type === "Trailer" && video.site === "YouTube"
     );
 
+    // Affichage du loader pendant le chargement
     if (loading) {
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-black">
@@ -103,26 +121,37 @@ export default function MoviePage() {
         );
     }
 
+    // Protection contre l'absence de données
     if (!movie) return null;
 
     return (
         <>
+            {/* SEO et métadonnées */}
             <Head>
+                {/* Titre de la page */}
                 <title>{movie.title} - Détails du film</title>
+                {/* Description de la page */}
                 <meta name="description" content={movie.overview?.slice(0, 155) + '...'} />
+                {/* Métadonnées OpenGraph */}
                 <meta property="og:title" content={`${movie.title} - Détails du film`} />
                 <meta property="og:description" content={movie.overview?.slice(0, 155) + '...'} />
                 <meta property="og:image" content={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} />
                 <meta property="og:type" content="video.movie" />
-                <meta property="og:site_name" content="Cinéma App" />
+                <meta property="og:site_name" content="CinéVerse" />
+                {/* Métadonnées Twitter */}
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:title" content={movie.title} />
                 <meta name="twitter:description" content={movie.overview?.slice(0, 155) + '...'} />
                 <meta name="twitter:image" content={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} />
                 <meta name="theme-color" content="#000000" />
-                <link rel="icon" href="/favicon.ico" />
+                {/* Icône de la page */}
+                <link rel="icon" href="/movie-icon.png" type="image/png" />
             </Head>
 
+            {/* Barre de navigation */}
+            <Navigation />
+
+            {/* Contenu principal */}
             <main className="relative min-h-screen w-full">
                 {/* Background dynamique */}
                 <div className="fixed inset-0 -z-10">

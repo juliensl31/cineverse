@@ -1,26 +1,31 @@
 import { useRouter } from 'next/router';
 import Rated from './Rated';
+
+// Props pour le composant MovieCard
 interface MovieCardProps {
   movie: {
-    id: number;
-    title: string;
-    poster_path: string;
-    release_date: string;
-    vote_average: number;
+    id: number; // Identifiant unique du film
+    title: string; // Titre du film
+    poster_path: string; // Chemin de l'affiche du film
+    release_date: string; // Date de sortie du film
+    vote_average: number; // Note moyenne du film
   };
 }
 
+// Carte cliquable affichant les informations d'un film (poster, titre, année, note)
 const MovieCard = ({ movie }: MovieCardProps) => {
   const router = useRouter();
 
   return (
     <div 
+      // Conteneur pour la carte du film
       className="flex flex-col group cursor-pointer" 
       onClick={() => router.push(`/movie/${movie.id}`)}
     >
-      {/* Image container */}
+      {/* Poster du film avec effets au survol */}
       <div className="relative overflow-hidden rounded-xl shadow-md transition-all duration-500 
         hover:shadow-2xl hover:shadow-purple-200/50 hover:-translate-y-2">
+        {/* Image du film */}
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title}
@@ -28,22 +33,23 @@ const MovieCard = ({ movie }: MovieCardProps) => {
             transition-all duration-500 scale-100 group-hover:scale-110"
           loading="lazy"
         />
-        {/* Overlay au survol */}
+        {/* Filtre de couleur au survol */}
         <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-transparent to-transparent 
           opacity-0 group-hover:opacity-100 transition-opacity duration-500">
         </div>
-        {/* Badge de note */}
+        {/* Note du film */}
         <div className="absolute top-3 right-3">
           <Rated movie={movie} />
         </div>
       </div>
 
-      {/* Infos sous l'image */}
+      {/* Titre et année de sortie */}
       <div className="mt-4 px-1 space-y-1">
         <h3 className="font-semibold text-lg leading-tight line-clamp-1 
           group-hover:text-purple-600 transition-colors duration-300">
           {movie.title}
         </h3>
+        {/* Année de sortie */}
         <span className="text-sm text-gray-500 font-medium transform origin-left 
           group-hover:scale-105 transition-transform duration-300">
           {new Date(movie.release_date).getFullYear()}
