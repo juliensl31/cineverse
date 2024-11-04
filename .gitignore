@@ -22,9 +22,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Next.js
-/.next/
-/out/
+
 # Vercel
 .vercel
 
@@ -32,3 +30,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Next.js build output
+.next
+.next/
+
+# VSCode
+.vscode

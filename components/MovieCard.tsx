@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+import Rated from './Rated';
 interface MovieCardProps {
   movie: {
     id: number;
@@ -9,8 +11,13 @@ interface MovieCardProps {
 }
 
 const MovieCard = ({ movie }: MovieCardProps) => {
+  const router = useRouter();
+
   return (
-    <div className="flex flex-col group">
+    <div 
+      className="flex flex-col group cursor-pointer" 
+      onClick={() => router.push(`/movie/${movie.id}`)}
+    >
       {/* Image container */}
       <div className="relative overflow-hidden rounded-xl shadow-md transition-all duration-500 
         hover:shadow-2xl hover:shadow-purple-200/50 hover:-translate-y-2">
@@ -26,10 +33,8 @@ const MovieCard = ({ movie }: MovieCardProps) => {
           opacity-0 group-hover:opacity-100 transition-opacity duration-500">
         </div>
         {/* Badge de note */}
-        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm px-2.5 py-1 
-          rounded-lg font-medium tracking-wide transform group-hover:translate-x-1 transition-transform">
-          <span className="text-yellow-300">★</span>
-          <span className="text-white/90 ml-1.5">{movie.vote_average.toFixed(1)}</span>
+        <div className="absolute top-3 right-3">
+          <Rated movie={movie} />
         </div>
       </div>
 

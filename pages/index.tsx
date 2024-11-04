@@ -37,7 +37,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-    <Head>
+      <Head>
         <title>CinéVerse | Votre univers cinématographique</title>
         <meta name="description" content="Explorez les films populaires, découvrez les dernières sorties et créez votre watchlist personnalisée" />
         <link rel="icon" href="/favicon.ico" />

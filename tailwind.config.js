@@ -11,6 +11,13 @@ module.exports = {
       },
       animation: {
         'gradient-x': 'gradient-x 8s ease infinite',
+        'fade-in': 'fadeIn 1s ease-in',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
     },
   },
