@@ -4,6 +4,7 @@ import Spinner from '../components/Spinner';
 import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
 import SearchBar from '../components/SearchBar';
+import SerieCard from '../components/SerieCard';
 
 //Interface pour les données de films reçues de l'API TMDB
 interface Movie {
@@ -15,24 +16,41 @@ interface Movie {
   vote_average: number; // Note moyenne du film
 }
 
+// Interface pour les données des séries reçues de l'API TMDB
+interface Serie {
+  id: number; // Identifiant unique de la série
+  name: string; // titre de la série
+  poster_path: string; // chemin de l'affiche de la série
+  overview: string; // résumé de la série
+  first_air_date: string; // date de première diffusion de la série
+  vote_average: number; // note moyenne de la série
+}
+
 // Type pour le type de recherche
 type SearchType = 'movie' | 'tv' | 'person';
 
 // Composant principal de la page d'accueil
 const Home: NextPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [series, setSeries] = useState<Serie[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Charge les films à l'affiche au montage du composant
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(
-          // Appel à l'API TMDB pour obtenir les films à l'affiche
-          `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&page=1`
-        );
-        const data = await response.json();
-        setMovies(data.results);
+        const [moviesResponse, sciFiFantasyResponse] = await Promise.all([
+          fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&page=1`),
+          fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&sort_by=popularity.desc&with_genres=10765&page=1`)
+        ]);
+        // Récupérer les données des films et des séries
+        const [moviesData, seriesData] = await Promise.all([
+          moviesResponse.json(),
+          sciFiFantasyResponse.json()
+        ]);
+        // Récupérer les 10 premiers films et séries
+        setMovies(moviesData.results.slice(0, 10));
+        setSeries(seriesData.results.slice(0, 10));
       } catch (error) {
         console.error('Erreur:', error);
       } finally {
@@ -40,9 +58,9 @@ const Home: NextPage = () => {
       }
     };
 
-    fetchMovies();
+    fetchData();
   }, []);
-
+  // Fonction pour rechercher des films ou séries
   const handleSearch = async (query: string, type: SearchType) => {
     setLoading(true);
     try {
@@ -50,7 +68,14 @@ const Home: NextPage = () => {
         `https://api.themoviedb.org/3/search/${type}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&query=${query}&page=1`
       );
       const data = await response.json();
-      setMovies(data.results);
+      
+      if (type === 'movie') {
+        setMovies(data.results.slice(0, 10));
+        setSeries([]); // Vider les séries
+      } else if (type === 'tv') {
+        setSeries(data.results.slice(0, 10));
+        setMovies([]); // Vider les films
+      }
     } catch (error) {
       console.error('Erreur:', error);
     } finally {
@@ -99,7 +124,7 @@ const Home: NextPage = () => {
             </p>
           </div>
         
-      {/* Ajout de la SearchBar */}
+      {/* SearchBar */}
       <div className="mt-8 mb-12">
         <SearchBar onSearch={handleSearch} />
       </div>
@@ -110,14 +135,30 @@ const Home: NextPage = () => {
           <Spinner />
         </div>
       ) : (
-        // Affichage de la grille de films
-        <div className="mt-12">
-          <h2 className="text-3xl text-center font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 tracking-wide">Films à l'affiche</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
+        <div className="space-y-16">
+          {/* Section Films */}
+          <section>
+            <h2 className="text-3xl text-center font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 tracking-wide">
+              Films à l&apos;affiche
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {movies.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </div>
+          </section>
+
+          {/* Section Séries */}
+          <section>
+            <h2 className="text-3xl text-center font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 tracking-wide">
+              Séries Science-Fiction & Fantastique
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {series.map((series) => (
+                <SerieCard key={series.id} series={series} />
+              ))}
+            </div>
+          </section>
         </div>
       )}
       </div>
