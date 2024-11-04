@@ -125,8 +125,8 @@ const Home: NextPage = () => {
           </div>
         
       {/* SearchBar */}
-      <div className="mt-8 mb-12">
-        <SearchBar onSearch={handleSearch} />
+      <div className="sticky top-0 z-50 bg-primary py-4 shadow-lg">
+        <SearchBar onSearch={(query: string) => handleSearch(query, 'movie')} />
       </div>
 
       {/* Affiche un spinner pendant le chargement, sinon la grille de films */}

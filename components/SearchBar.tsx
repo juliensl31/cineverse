@@ -1,62 +1,172 @@
-import { useState } from 'react';
+// Barre de recherche avec suggestions automatiques
+// Permet de rechercher des films, séries et acteurs
+// Affiche jusqu'à 5 suggestions pendant la saisie
+'use client'
+
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FiSearch } from 'react-icons/fi';
+import debounce from 'lodash/debounce';
+import { useRouter } from 'next/router';
 
-export type SearchType = 'movie' | 'tv' | 'person';
+// Interface pour les résultats de recherche
+// Définit la structure des données retournées par l'API TMDB
+interface SearchResult {
+  id: number;                                    // ID unique du média
+  name?: string;                                 // Nom (pour les acteurs/séries)
+  title?: string;                                // Titre (pour les films)
+  media_type: 'movie' | 'tv' | 'actor';         // Type de média
+}
 
+// Props du composant SearchBar
 interface SearchBarProps {
-  onSearch: (query: string, type: SearchType) => void;
+  onSearch: (query: string) => void;
 }
 
 const SearchBar = ({ onSearch }: SearchBarProps) => {
+  // États locaux pour gérer la recherche et les suggestions
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchType, setSearchType] = useState<SearchType>('movie');
+  const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const router = useRouter();
 
+  // Fonction de recherche avec debounce pour limiter les appels API
+  const debouncedFetch = useCallback(
+    async (query: string) => {
+      if (!query.trim()) {
+        setSuggestions([]);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/search/multi?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&query=${query}&language=fr-FR`
+        );
+        const data = await response.json();
+        setSuggestions(data.results.slice(0, 5));
+      } catch (error) {
+        console.error('Erreur lors de la recherche:', error);
+      }
+    },
+    []
+  );
+
+  // Application du debounce avec un délai de 300ms
+  const debouncedFetchWithDelay = useMemo(
+    () => debounce(debouncedFetch, 300),
+    [debouncedFetch]
+  );
+
+  // Effet pour déclencher la recherche quand la requête change
+  useEffect(() => {
+    debouncedFetchWithDelay(searchQuery);
+    // Nettoyage du debounce lors du démontage du composant
+    return () => debouncedFetchWithDelay.cancel();
+  }, [searchQuery, debouncedFetchWithDelay]);
+
+  // Gestion de la soumission du formulaire
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      onSearch(searchQuery, searchType);
+      onSearch(searchQuery);
+      setShowSuggestions(false);
+    }
+  };
+
+  // Gestion du clic sur une suggestion
+  const handleSuggestionClick = async (suggestion: SearchResult) => {
+    // Mise à jour de l'interface utilisateur
+    const title = suggestion.title || suggestion.name || '';
+    setSearchQuery(title);
+    onSearch(title);
+    setShowSuggestions(false);
+    
+    // Navigation vers la page détaillée
+    try {
+      // Détermination de l'URL en fonction du type de média
+      const baseUrl = suggestion.media_type === 'movie' ? '/movie' :
+                     suggestion.media_type === 'tv' ? '/serie' : 
+                     suggestion.media_type === 'actor' ? '/actor' : '';
+      await router.push(`${baseUrl}/${suggestion.id}`);
+    } catch (error) {
+      console.error('Erreur de navigation:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto">
-      <div className="relative flex items-center gap-2">
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-          <FiSearch className="h-5 w-5 text-gray-400" />
+    // Structure du composant
+    <div className="w-full max-w-3xl mx-auto relative group">
+      {/* Formulaire de recherche avec icône et champ de saisie */}
+      <form onSubmit={handleSubmit}>
+        <div className="relative flex items-center">
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+            <FiSearch className="h-5 w-5 text-purple-400" />
+          </div>
+          
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            className="block w-full pl-12 pr-24 py-4 rounded-xl
+              bg-gray-900/50 backdrop-blur-sm
+              border border-purple-500/20 
+              focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20
+              text-white placeholder-gray-400
+              transition-all duration-300 ease-in-out
+              group-hover:border-purple-500/30
+              shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+            placeholder="Rechercher un film, une série ou un acteur..."
+          />
+          
+          <button 
+            type="submit"
+            className="absolute right-2 top-1/2 -translate-y-1/2
+              h-10 px-4 rounded-lg
+              bg-gradient-to-r from-purple-600 to-pink-600
+              text-white text-sm font-medium
+              hover:from-purple-700 hover:to-pink-700
+              transition-all duration-300 ease-in-out
+              disabled:opacity-50 disabled:cursor-not-allowed
+              shadow-[0_0_15px_rgba(168,85,247,0.25)]
+              hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+            disabled={!searchQuery.trim()}
+          >
+            Rechercher
+          </button>
         </div>
-        
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="block w-full pl-10 pr-3 py-3 rounded-l-full bg-gray-800/50 
-            border border-gray-700 focus:border-purple-500 focus:ring-2 
-            focus:ring-purple-500 text-white placeholder-gray-400"
-          placeholder="Rechercher un film, une série ou un acteur..."
-        />
-        
-        <select
-          value={searchType}
-          onChange={(e) => setSearchType(e.target.value as SearchType)}
-          className="min-w-[120px] h-12 px-4 bg-gray-800/50 border border-gray-700
-            text-white cursor-pointer hover:bg-gray-700/50 transition-colors"
-        >
-          <option value="movie">Films</option>
-          <option value="tv">Séries</option>
-          <option value="person">Acteurs</option>
-        </select>
+      </form>
 
-        <button 
-          type="submit"
-          className="h-12 px-6 rounded-r-full bg-purple-600 text-white 
-            hover:bg-purple-700 transition-colors disabled:opacity-50 
-            disabled:cursor-not-allowed"
-          disabled={!searchQuery.trim()}
-        >
-          Valider
-        </button>
-      </div>
-    </form>
+      {/* Liste déroulante des suggestions 
+          Affichée uniquement si showSuggestions est true et qu'il y a des suggestions */}
+      {showSuggestions && suggestions.length > 0 && (
+        <div className="absolute w-full mt-2 bg-gray-900/90 backdrop-blur-md 
+          border border-purple-500/20 rounded-xl z-50
+          shadow-[0_0_20px_rgba(0,0,0,0.2)]">
+          {/* Mapping des suggestions pour créer les éléments de la liste */}
+          {suggestions.map((suggestion) => (
+            <div
+              key={`${suggestion.id}-${suggestion.media_type}`}
+              onClick={() => handleSuggestionClick(suggestion)}
+              className="p-4 hover:bg-purple-500/10 cursor-pointer 
+                flex items-center justify-between
+                transition-colors duration-200 first:rounded-t-xl last:rounded-b-xl"
+            >
+              <span className="text-white font-medium">
+                {suggestion.title || suggestion.name}
+              </span>
+              <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-300">
+                {suggestion.media_type === 'movie' ? 'Film' : 
+                 suggestion.media_type === 'tv' ? 'Série' : 
+                 suggestion.media_type === 'actor' ? 'Acteur' : ''}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { Button } from './Button';
 
 // Type pour les props du composant
 interface NavigationProps {
@@ -35,9 +35,8 @@ export default function Navigation({ title }: NavigationProps) {
             <div className="container mx-auto px-4 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     {/* Bouton Retour - Revient à la page précédente */}
-                    <button
-                        onClick={() => router.back()}
-                        className="flex items-center justify-center gap-2 px-4 h-10 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/5 transition-all duration-200 transform active:scale-95"
+                    <Button onClick={() => router.back()}
+                        className="flex items-center justify-center gap-2 px-4 h-10 rounded-xl"
                         aria-label="Retour"
                     >
                         {/* Icône flèche retour */}
@@ -45,25 +44,26 @@ export default function Navigation({ title }: NavigationProps) {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                         </svg>
                         <span className="text-white text-sm font-medium">Retour</span>
-                    </button>
+
+                    </Button>
                     
                     {/* Lien Accueil - Redirige vers la page d'accueil */}
-                    <Link 
-                        href="/" 
-                        className="flex items-center justify-center gap-2 px-4 h-10 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/5 transition-all duration-200 transform active:scale-95"
+                    <Button 
+                        onClick={() => router.push("/")} 
+                        className="flex items-center justify-center gap-2 px-4 h-10 rounded-xl "
                     >
                         {/* Icône maison */}
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                         <span className="text-white text-sm font-medium">Accueil</span>
-                    </Link>
+                    </Button>
                 </div>
 
                 {/* Bouton Partager - Déclenche la fonction de partage */}
-                <button
+                <Button
                     onClick={handleShare}
-                    className="flex items-center justify-center gap-2 px-4 h-10 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/5 transition-all duration-200 transform active:scale-95"
+                    className="flex items-center justify-center gap-2 px-4 h-10 rounded-xl"
                     aria-label="Partager"
                 >
                     {/* Icône partage */}
@@ -71,7 +71,7 @@ export default function Navigation({ title }: NavigationProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
                     <span className="text-white text-sm font-medium">Partager</span>
-                </button>
+                </Button>
             </div>
         </nav>
     );
