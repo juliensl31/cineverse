@@ -125,13 +125,8 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
             type="submit"
             className="absolute right-2 top-1/2 -translate-y-1/2
               h-10 px-4 rounded-lg
-              bg-gradient-to-r from-purple-600 to-pink-600
-              text-white text-sm font-medium
-              hover:from-purple-700 hover:to-pink-700
-              transition-all duration-300 ease-in-out
-              disabled:opacity-50 disabled:cursor-not-allowed
-              shadow-[0_0_15px_rgba(168,85,247,0.25)]
-              hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+              disabled:opacity-50 disabled:cursor-not-allowed 
+              btn-gradient"
             disabled={!searchQuery.trim()}
           >
             Rechercher
