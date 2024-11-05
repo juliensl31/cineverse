@@ -221,7 +221,11 @@ export default function MoviePage() {
                                         {movie.credits.crew
                                             .filter(member => ['Director', 'Producer', 'Screenplay'].includes(member.job))
                                             .map(member => (
-                                                <div key={member.id} className='text-gray-300'>
+                                                <div 
+                                                    key={member.id} 
+                                                    className='text-gray-300 cursor-pointer hover:text-white transition-colors'
+                                                    onClick={() => router.push(`/artist/${member.id}`)}
+                                                >
                                                     <span className='text-white font-medium'>{member.name}</span>
                                                     <span className='text-gray-400 ml-2'>
                                                         ({member.job === 'Director' ? 'Réalisateur' : 
@@ -348,7 +352,8 @@ export default function MoviePage() {
                                             .map(actor => (
                                                 <div
                                                     key={actor.id}
-                                                    className="w-[180px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300"
+                                                    className="w-[180px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300 cursor-pointer"
+                                                    onClick={() => router.push(`/artist/${actor.id}`)}
                                                 >
                                                     <div className="aspect-[2/3] relative overflow-hidden">
                                                         {actor.profile_path ? (
@@ -386,50 +391,50 @@ export default function MoviePage() {
                         <div className="mt-16">
                             <h2 className="text-3xl font-bold text-white mb-8">Recommandations</h2>
 
-                            <div className="overflow-x-auto pb-6 
-                                            [&::-webkit-scrollbar]:h-2
-                                            [&::-webkit-scrollbar-track]:rounded-full
-                                            [&::-webkit-scrollbar-track]:bg-white/10
-                                            [&::-webkit-scrollbar-thumb]:rounded-full
-                                            [&::-webkit-scrollbar-thumb]:bg-white/40
-                                            [&::-webkit-scrollbar-thumb:hover]:bg-white/50">
-                                <div className="flex gap-6 min-w-max px-1">
-                                    {movie.recommendations.results.slice(0, 10).map(film => (
-                                        <div
-                                            key={film.id}
+                                <div className="overflow-x-auto pb-6 
+                                                [&::-webkit-scrollbar]:h-2
+                                                [&::-webkit-scrollbar-track]:rounded-full
+                                                [&::-webkit-scrollbar-track]:bg-white/10
+                                                [&::-webkit-scrollbar-thumb]:rounded-full
+                                                [&::-webkit-scrollbar-thumb]:bg-white/40
+                                                [&::-webkit-scrollbar-thumb:hover]:bg-white/50">
+                                    <div className="flex gap-6 min-w-max px-1">
+                                        {movie.recommendations.results.slice(0, 10).map(film => (
+                                            <div
+                                                key={film.id}
                                             className="w-[200px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300 cursor-pointer"
-                                            onClick={() => router.push(`/movie/${film.id}`)}
-                                        >
-                                            <div className="aspect-[2/3] relative overflow-hidden">
-                                                {film.poster_path ? (
-                                                    <img
-                                                        src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
-                                                        alt={film.title}
-                                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                                                        <span className="text-4xl text-white/30">🎬</span>
-                                                    </div>
-                                                )}
+                                                onClick={() => router.push(`/movie/${film.id}`)}
+                                            >
+                                                <div className="aspect-[2/3] relative overflow-hidden">
+                                                    {film.poster_path ? (
+                                                        <img
+                                                            src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
+                                                            alt={film.title}
+                                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                                            <span className="text-4xl text-white/30">🎬</span>
+                                                        </div>
+                                                    )}
 
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                            </div>
-
-                                            <div className="p-4">
-                                                <h3 className="text-white font-semibold text-lg truncate">
-                                                    {film.title}
-                                                </h3>
-                                                <div className="absolute top-3 right-3">
-                                                    <Rated movie={film} />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                                 </div>
+
+                                                <div className="p-4">
+                                                    <h3 className="text-white font-semibold text-lg truncate">
+                                                        {film.title}
+                                                    </h3>
+                                                    <div className="absolute top-3 right-3">
+                                                        <Rated movie={film} />
+                                                    </div>
                                                 <div className="flex items-center gap-2 mt-2">
                                                     <span className="text-white/50 text-sm">
                                                         {new Date(film.release_date).getFullYear()}
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
+                                    </div>
                                     ))}
                                 </div>
                             </div>

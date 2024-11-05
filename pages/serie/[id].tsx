@@ -224,7 +224,11 @@ export default function SeriePage() {
                                         {serie.credits.crew
                                             .filter(member => ['Director', 'Producer', 'Screenplay'].includes(member.job))
                                             .map(member => (
-                                                <div key={member.id} className='text-gray-300'>
+                                                <div 
+                                                    key={member.id} 
+                                                    className='text-gray-300 cursor-pointer hover:text-white transition-colors'
+                                                    onClick={() => router.push(`/artist/${member.id}`)}
+                                                >
                                                     <span className='text-white font-medium'>{member.name}</span>
                                                     <span className='text-gray-400 ml-2'>
                                                         ({member.job === 'Director' ? 'Réalisateur' : 
@@ -351,7 +355,8 @@ export default function SeriePage() {
                                             .map(actor => (
                                                 <div
                                                     key={actor.id}
-                                                    className="w-[180px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300"
+                                                    className="w-[180px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300 cursor-pointer"
+                                                    onClick={() => router.push(`/artist/${actor.id}`)}
                                                 >
                                                     <div className="aspect-[2/3] relative overflow-hidden">
                                                         {actor.profile_path ? (

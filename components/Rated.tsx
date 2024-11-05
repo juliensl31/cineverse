@@ -23,7 +23,7 @@ const Rated = ({ movie }: { movie: { vote_average: number } }) => {
                         cy="24"
                         r="20"
                         strokeWidth="3"
-                        className="fill-none stroke-purple-600"
+                        className="fill-none stroke-pink-500"
                         strokeLinecap="round"
                         style={{
                             strokeDasharray: `${2 * Math.PI * 20}`,
