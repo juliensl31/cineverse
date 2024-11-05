@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
 import SearchBar from '../components/SearchBar';
 import SerieCard from '../components/SerieCard';
+import Link from 'next/link';
 
 //Interface pour les données de films reçues de l'API TMDB
 interface Movie {
@@ -132,6 +133,16 @@ const Home: NextPage = () => {
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
+            </div>
+            <div className="flex justify-center mt-8">
+              <Link 
+                href="/movies" 
+                className="btn-gradient inline-flex items-center justify-center gap-2 px-6 h-12 rounded-xl mb-8">
+                <span className="text-white text-base font-medium">Voir tous les films</span>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
             </div>
           </section>
 
