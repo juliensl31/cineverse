@@ -14,7 +14,7 @@ interface SearchResult {
   id: number;                                    // ID unique du média
   name?: string;                                 // Nom (pour les acteurs/séries)
   title?: string;                                // Titre (pour les films)
-  media_type: 'movie' | 'tv' | 'actor';         // Type de média
+  media_type: 'movie' | 'tv' | 'person';         // Type de média
 }
 
 // Props du composant SearchBar
@@ -85,7 +85,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
       // Détermination de l'URL en fonction du type de média
       const baseUrl = suggestion.media_type === 'movie' ? '/movie' :
                      suggestion.media_type === 'tv' ? '/serie' : 
-                     suggestion.media_type === 'actor' ? '/actor' : '';
+                     suggestion.media_type === 'person' ? '/artist' : '';
       await router.push(`${baseUrl}/${suggestion.id}`);
     } catch (error) {
       console.error('Erreur de navigation:', error);
@@ -155,7 +155,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
               <span className="text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-300">
                 {suggestion.media_type === 'movie' ? 'Film' : 
                  suggestion.media_type === 'tv' ? 'Série' : 
-                 suggestion.media_type === 'actor' ? 'Acteur' : ''}
+                 suggestion.media_type === 'person' ? 'Acteur' : ''}
               </span>
             </div>
           ))}

@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
+import SeoMetadata from '../components/SeoMetadata';
 import Spinner from '../components/Spinner';
 import { useEffect, useState } from 'react';
 import MovieCard from '../components/MovieCard';
@@ -86,25 +86,12 @@ const Home: NextPage = () => {
   return (
     <>
       {/* SEO et métadonnées */}
-      <Head>
-        {/* Titre de la page */}
-        <title>CinéVerse | Votre univers cinématographique</title>
-        {/* Description de la page */}
-        <meta name="description" content="Explorez les films populaires, découvrez les dernières sorties et créez votre watchlist personnalisée" />
-        {/* Métadonnées OpenGraph */}
-        <meta property="og:title" content="CinéVerse | Votre univers cinématographique" />
-        <meta property="og:description" content="Explorez les films populaires, découvrez les dernières sorties et créez votre watchlist personnalisée" />
-        <meta property="og:image" content="/movie-icon.png" />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="CinéVerse" />
-        {/* Métadonnées Twitter */}
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="CinéVerse | Votre univers cinématographique" />
-        <meta name="twitter:description" content="Explorez les films populaires, découvrez les dernières sorties et créez votre watchlist personnalisée" />
-        <meta name="twitter:image" content="/movie-icon.png" />
-        {/* Icône de la page */}
-        <link rel="icon" href="/movie-icon.png" type="image/png" />
-      </Head>
+      <SeoMetadata 
+        title="CinéVerse | Votre univers cinématographique"
+        description="Explorez les films populaires, découvrez les dernières sorties et créez votre watchlist personnalisée"
+        image="/movie-icon.png"
+      />
+
       {/* Conteneur principal */}
       <main className="min-h-screen h-full w-full p-4 bg-primary text-white">
       <div className='container mx-auto px-4 py-12 min-h-screen'>
@@ -125,7 +112,7 @@ const Home: NextPage = () => {
           </div>
         
       {/* SearchBar */}
-      <div className="sticky top-0 z-50 bg-primary py-4 shadow-lg">
+      <div className="sticky top-0 z-50 bg-primary py-4">
         <SearchBar onSearch={(query: string) => handleSearch(query, 'movie')} />
       </div>
 
@@ -135,7 +122,7 @@ const Home: NextPage = () => {
           <Spinner />
         </div>
       ) : (
-        <div className="space-y-16">
+        <div className="space-y-24 mt-16">
           {/* Section Films */}
           <section>
             <h2 className="text-3xl text-center font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 tracking-wide">
@@ -151,7 +138,7 @@ const Home: NextPage = () => {
           {/* Section Séries */}
           <section>
             <h2 className="text-3xl text-center font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 tracking-wide">
-              Séries
+              Séries Sci-Fi & Fantastiques
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {series.map((series) => (

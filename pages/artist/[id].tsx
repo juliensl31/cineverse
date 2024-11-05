@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Head from 'next/head';
+import SeoMetadata from '../../components/SeoMetadata';
 import Spinner from '../../components/Spinner';
 import { FaInstagram, FaTwitter, FaTiktok, FaYoutube, FaGlobe } from 'react-icons/fa';
-import Rated from '../../components/Rated';
+import ScrollableCards from '../../components/ScrollableCards';
+import Navigation from '../../components/Navigation';
 
 // Ajouter cette fonction utilitaire en haut du fichier
 const calculateAge = (birthday: string, deathday: string | null): string => {
@@ -36,42 +37,42 @@ const translateDepartment = (department: string): string => {
 
 // Interfaces pour les données
 interface Artist {
-  id: number;
-  name: string;
-  profile_path: string | null;
-  biography: string;
-  birthday: string | null;
-  deathday: string | null;
-  place_of_birth: string | null;
+  id: number; // Identifiant unique de l'artiste
+  name: string; // Nom de l'artiste
+  profile_path: string | null; // Chemin de l'affiche de l'artiste
+  biography: string; // Biographie de l'artiste
+  birthday: string | null; // Date de naissance de l'artiste
+  deathday: string | null; // Date de décès de l'artiste
+  place_of_birth: string | null; // Lieu de naissance de l'artiste
   known_for_department: string;
   external_ids: {
-    instagram_id: string | null;
-    twitter_id: string | null;
-    tiktok_id: string | null;
-    youtube_id: string | null;
+    instagram_id: string | null; // Identifiant Instagram de l'artiste
+    twitter_id: string | null; // Identifiant Twitter de l'artiste
+    tiktok_id: string | null; // Identifiant TikTok de l'artiste
+    youtube_id: string | null; // Identifiant YouTube de l'artiste
   };
   homepage: string | null;
   gender: number; // 1 pour Femme, 2 pour Homme
 }
 
 interface Movie {
-  id: number;
-  title: string;
-  poster_path: string;
-  character: string;
-  release_date: string;
-  vote_average: number;
-  overview: string;
+  id: number; // Identifiant unique du film
+  title: string; // Titre du film
+  poster_path: string; // Chemin de l'affiche du film
+  character: string; // Rôle joué par l'artiste
+  release_date: string; // Date de sortie du film
+  vote_average: number; // Note moyenne du film
+  overview: string; // Résumé du film
 }
 
 interface TVShow {
-  id: number;
-  name: string;
-  poster_path: string;
-  character: string;
-  first_air_date: string;
-  vote_average: number;
-  overview: string;
+  id: number; // Identifiant unique de la série
+  name: string; // Titre de la série
+  poster_path: string; // Chemin de l'affiche de la série
+  character: string; // Rôle joué par l'artiste
+  first_air_date: string; // Date de première diffusion de la série
+  vote_average: number; // Note moyenne de la série
+  overview: string; // Résumé de la série
 }
 
 const ArtistPage = () => {
@@ -99,9 +100,16 @@ const ArtistPage = () => {
           tvResponse.json()
         ]);
 
+        // Tri des films et séries TV par popularité
         setArtist(artistData);
-        setMovies(moviesData.cast.slice(0, 15));
-        setTvShows(tvData.cast.slice(0, 15));
+        const sortedMovies = moviesData.cast
+          .sort((a: Movie, b: Movie) => b.vote_average - a.vote_average)
+          .slice(0, 15);
+        setMovies(sortedMovies);
+        const sortedTvShows = tvData.cast
+          .sort((a: TVShow, b: TVShow) => b.vote_average - a.vote_average)
+          .slice(0, 15);
+        setTvShows(sortedTvShows);
       } catch (error) {
         console.error('Erreur:', error);
       } finally {
@@ -109,9 +117,11 @@ const ArtistPage = () => {
       }
     };
 
+    // Charge les données de l'artiste
     fetchArtistData();
   }, [id]);
 
+  // Si les données sont en cours de chargement, afficher un spinner
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-primary">
@@ -120,19 +130,27 @@ const ArtistPage = () => {
     );
   }
 
+  // Si l'artiste n'est pas trouvé, afficher un message
   if (!artist) {
     return <div className="text-center text-white">Artiste non trouvé</div>;
   }
 
   return (
     <>
-      <Head>
-        <title>{`${artist.name} | CinéVerse`}</title>
-        <meta name="description" content={`Découvrez la biographie et la filmographie de ${artist.name}`} />
-      </Head>
+      {/* Métadonnées SEO */}
+      <SeoMetadata 
+        title={artist.name}
+        description={artist.biography}
+        image={`https://image.tmdb.org/t/p/w1280${artist.profile_path}`}
+      />
+
+      {/* Barre de navigation */}
+      <Navigation />
 
       <main className="min-h-screen bg-[#030014]">
-        <div className="container mx-auto px-4 py-8">
+        <div className="relative z-10 container mx-auto px-12 py-36">
+        <div className="bg-black/40 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-xl border border-white/10">
+
           {/* En-tête de l'artiste */}
           <div className="flex flex-col md:flex-row gap-8">
             {/* Colonne gauche : Photo et réseaux sociaux */}
@@ -147,17 +165,19 @@ const ArtistPage = () => {
                   />
                 </div>
               ) : (
+                // Si l'artiste n'a pas de photo, afficher un placeholder
                 <div className="aspect-[2/3] bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl flex items-center justify-center">
                   <span className="text-4xl text-white/30">👤</span>
                 </div>
               )}
 
               {/* Réseaux sociaux */}
-              {(artist.external_ids.instagram_id || 
+                {(artist.external_ids.instagram_id || 
                 artist.external_ids.twitter_id || 
                 artist.external_ids.tiktok_id || 
                 artist.external_ids.youtube_id || 
                 artist.homepage) && (
+                // Si l'artiste a au moins un réseau social ou un site officiel, afficher les boutons
                 <div className="flex flex-wrap justify-center gap-4 mt-4">
                   {artist.external_ids.instagram_id && (
                     <a
@@ -236,14 +256,6 @@ const ArtistPage = () => {
                   </div>
                 )}
 
-                {/* Genre */}
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-                  <span className="text-white/50 text-sm block">Genre</span>
-                  <span className="text-white font-medium">
-                    {artist.gender === 1 ? 'Femme' : artist.gender === 2 ? 'Homme' : 'Non spécifié'}
-                  </span>
-                </div>
-
                 {/* Date de naissance */}
                 {artist.birthday && (
                   <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
@@ -258,34 +270,42 @@ const ArtistPage = () => {
                   </div>
                 )}
 
+                {/* Lieu de naissance */}
+                {artist.place_of_birth && (
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                    <span className="text-white/50 text-sm block">Lieu de naissance</span>
+                    <span className="text-white font-medium">{artist.place_of_birth}</span>
+                </div>
+                )}
+
+                {/* Genre */}
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                  <span className="text-white/50 text-sm block">Genre</span>
+                  <span className="text-white font-medium">
+                    {artist.gender === 1 ? 'Femme' : artist.gender === 2 ? 'Homme' : 'Non spécifié'}
+                  </span>
+                </div>
+
+                {/* Date de décès */}
+                {artist.deathday && (
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                    <span className="text-white/50 text-sm block">Date de décès</span>
+                    <span className="text-white font-medium">
+                    {new Date(artist.deathday).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    })}
+                    </span>
+                </div>
+                )}
+
                 {/* Âge */}
                 {artist.birthday && (
                   <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
                     <span className="text-white/50 text-sm block">Âge</span>
                     <span className="text-white font-medium">
                       {calculateAge(artist.birthday, artist.deathday)}
-                    </span>
-                  </div>
-                )}
-
-                {/* Lieu de naissance */}
-                {artist.place_of_birth && (
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-                    <span className="text-white/50 text-sm block">Lieu de naissance</span>
-                    <span className="text-white font-medium">{artist.place_of_birth}</span>
-                  </div>
-                )}
-
-                {/* Date de décès */}
-                {artist.deathday && (
-                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-                    <span className="text-white/50 text-sm block">Date de décès</span>
-                    <span className="text-white font-medium">
-                      {new Date(artist.deathday).toLocaleDateString('fr-FR', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                      })}
                     </span>
                   </div>
                 )}
@@ -306,114 +326,19 @@ const ArtistPage = () => {
           </div>
 
           {/* Films */}
-          
-            <div className="mt-16">
-              <h2 className="text-3xl font-bold text-white mb-8">Films</h2>
-              <div className="overflow-x-auto pb-6 
-                            [&::-webkit-scrollbar]:h-2
-                            [&::-webkit-scrollbar-track]:rounded-full
-                            [&::-webkit-scrollbar-track]:bg-white/10
-                            [&::-webkit-scrollbar-thumb]:rounded-full
-                            [&::-webkit-scrollbar-thumb]:bg-white/40
-                            [&::-webkit-scrollbar-thumb:hover]:bg-white/50">
-                <div className="flex gap-6 min-w-max px-1">
-                    {movies.slice(0, 10).map(film => (
-                        <div
-                            key={film.id}
-                            className="w-[200px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300 cursor-pointer"
-                            onClick={() => router.push(`/movie/${film.id}`)}
-                        >
-                            <div className="aspect-[2/3] relative overflow-hidden">
-                                {film.poster_path ? (
-                                    <img
-                                        src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
-                                        alt={film.title}
-                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                                        <span className="text-4xl text-white/30">🎬</span>
-                                    </div>
-                                )}
-
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </div>
-
-                            <div className="p-4">
-                                <h3 className="text-white font-semibold text-lg truncate">
-                                    {film.title}
-                                </h3>
-                                <div className="absolute top-3 right-3">
-                                    <Rated movie={film} />
-                                </div>
-                                <div className="flex items-center gap-2 mt-2">
-                                    <span className="text-white/50 text-sm">
-                                        {new Date(film.release_date).getFullYear()}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-              </div>
-            </div>
-          
+          <ScrollableCards 
+            title="Films" 
+            items={movies} 
+            type="movie" 
+          />
 
           {/* Séries TV */}
-          {tvShows.length > 0 && (
-            <div className="mt-16">
-              <h2 className="text-3xl font-bold text-white mb-8">Séries TV</h2>
-              <div className="overflow-x-auto pb-6 
-                            [&::-webkit-scrollbar]:h-2
-                            [&::-webkit-scrollbar-track]:rounded-full
-                            [&::-webkit-scrollbar-track]:bg-white/10
-                            [&::-webkit-scrollbar-thumb]:rounded-full
-                            [&::-webkit-scrollbar-thumb]:bg-white/40
-                            [&::-webkit-scrollbar-thumb:hover]:bg-white/50">
-                <div className="flex gap-6 min-w-max px-1">
-                    {tvShows.map(show => (
-                        <div
-                            key={show.id}
-                            className="w-[200px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300 cursor-pointer"
-                            onClick={() => router.push(`/tv/${show.id}`)}
-                        >
-                            <div className="aspect-[2/3] relative overflow-hidden">
-                                {show.poster_path ? (
-                                    <img
-                                        src={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
-                                        alt={show.name}
-                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                                        <span className="text-4xl text-white/30">📺</span>
-                                    </div>
-                                )}
-
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </div>
-
-                            <div className="p-4">
-                                <h3 className="text-white font-semibold text-lg truncate">
-                                    {show.name}
-                                </h3>
-                                <div className="absolute top-3 right-3">
-                                    <Rated movie={show} />
-                                </div>
-                                <div className="flex items-center gap-2 mt-2">
-                                    <span className="text-white/50 text-sm">
-                                        {show.first_air_date && new Date(show.first_air_date).getFullYear()}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-              </div>
-              <div className="absolute left-0 top-0 bottom-6 w-12 bg-gradient-to-r from-[#030014] to-transparent pointer-events-none" />
-              <div className="absolute right-0 top-0 bottom-6 w-12 bg-gradient-to-l from-[#030014] to-transparent pointer-events-none" />
-            </div>
-          )}
+          <ScrollableCards 
+            title="Séries TV" 
+            items={tvShows} 
+            type="tv" 
+          />
+          </div>
         </div>
       </main>
     </>

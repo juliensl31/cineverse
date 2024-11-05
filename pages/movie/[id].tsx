@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import Spinner from '../../components/Spinner';
 import Rated from '../../components/Rated';
 import Navigation from '../../components/Navigation';
-import Head from 'next/head';
+import SeoMetadata from '../../components/SeoMetadata';
+import ScrollableCards from '../../components/ScrollableCards';
 
 //Interface décrivant la structure des données d'un film
  interface MovieDetails {
@@ -127,26 +128,11 @@ export default function MoviePage() {
     return (
         <>
             {/* SEO et métadonnées */}
-            <Head>
-                {/* Titre de la page */}
-                <title>{movie.title} - Détails du film</title>
-                {/* Description de la page */}
-                <meta name="description" content={movie.overview?.slice(0, 155) + '...'} />
-                {/* Métadonnées OpenGraph */}
-                <meta property="og:title" content={`${movie.title} - Détails du film`} />
-                <meta property="og:description" content={movie.overview?.slice(0, 155) + '...'} />
-                <meta property="og:image" content={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} />
-                <meta property="og:type" content="video.movie" />
-                <meta property="og:site_name" content="CinéVerse" />
-                {/* Métadonnées Twitter */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={movie.title} />
-                <meta name="twitter:description" content={movie.overview?.slice(0, 155) + '...'} />
-                <meta name="twitter:image" content={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} />
-                <meta name="theme-color" content="#000000" />
-                {/* Icône de la page */}
-                <link rel="icon" href="/movie-icon.png" type="image/png" />
-            </Head>
+            <SeoMetadata 
+                title={movie.title}
+                description={movie.overview}
+                image={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
+            />
 
             {/* Barre de navigation */}
             <Navigation />
@@ -334,111 +320,18 @@ export default function MoviePage() {
                         </div>
 
                         {/* Distribution */}
-                        <div className="mt-16">
-                            <h2 className="text-3xl font-bold text-white mb-8">Distribution</h2>
-
-                            {/* Acteurs principaux avec défilement horizontal */}
-                            <div className="relative">
-                                <div className="overflow-x-auto pb-6 
-                                                [&::-webkit-scrollbar]:h-2
-                                                [&::-webkit-scrollbar-track]:rounded-full
-                                                [&::-webkit-scrollbar-track]:bg-white/10
-                                                [&::-webkit-scrollbar-thumb]:rounded-full
-                                                [&::-webkit-scrollbar-thumb]:bg-white/40
-                                                [&::-webkit-scrollbar-thumb:hover]:bg-white/50">
-                                    <div className="flex gap-6 min-w-max px-1">
-                                        {movie.credits.cast
-                                            .slice(0, 15)
-                                            .map(actor => (
-                                                <div
-                                                    key={actor.id}
-                                                    className="w-[180px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300 cursor-pointer"
-                                                    onClick={() => router.push(`/artist/${actor.id}`)}
-                                                >
-                                                    <div className="aspect-[2/3] relative overflow-hidden">
-                                                        {actor.profile_path ? (
-                                                            <img
-                                                                src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
-                                                                alt={actor.name}
-                                                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                                            />
-                                                        ) : (
-                                                            <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                                                                <span className="text-4xl text-white/30">👤</span>
-                                                            </div>
-                                                        )}
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                                    </div>
-
-                                                    <div className="p-4">
-                                                        <h3 className="text-white font-semibold text-lg truncate">
-                                                            {actor.name}
-                                                        </h3>
-                                                        <p className="text-white/60 text-sm mt-1 truncate">
-                                                            {actor.character}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                    </div>
-                                </div>
-                                <div className="absolute left-0 top-0 bottom-6 w-12 bg-gradient-to-r from-[#030014] to-transparent pointer-events-none" />
-                                <div className="absolute right-0 top-0 bottom-6 w-12 bg-gradient-to-l from-[#030014] to-transparent pointer-events-none" />
-                            </div>
-                        </div>
+                        <ScrollableCards 
+                            title="Distribution" 
+                            items={movie.credits.cast} 
+                            type="person" 
+                        />
 
                         {/* Recommandations */}
-                        <div className="mt-16">
-                            <h2 className="text-3xl font-bold text-white mb-8">Recommandations</h2>
-
-                                <div className="overflow-x-auto pb-6 
-                                                [&::-webkit-scrollbar]:h-2
-                                                [&::-webkit-scrollbar-track]:rounded-full
-                                                [&::-webkit-scrollbar-track]:bg-white/10
-                                                [&::-webkit-scrollbar-thumb]:rounded-full
-                                                [&::-webkit-scrollbar-thumb]:bg-white/40
-                                                [&::-webkit-scrollbar-thumb:hover]:bg-white/50">
-                                    <div className="flex gap-6 min-w-max px-1">
-                                        {movie.recommendations.results.slice(0, 10).map(film => (
-                                            <div
-                                                key={film.id}
-                                            className="w-[200px] flex-shrink-0 bg-white/5 rounded-xl overflow-hidden backdrop-blur-sm border border-white/10 group hover:bg-white/10 transition-colors duration-300 cursor-pointer"
-                                                onClick={() => router.push(`/movie/${film.id}`)}
-                                            >
-                                                <div className="aspect-[2/3] relative overflow-hidden">
-                                                    {film.poster_path ? (
-                                                        <img
-                                                            src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
-                                                            alt={film.title}
-                                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                                                            <span className="text-4xl text-white/30">🎬</span>
-                                                        </div>
-                                                    )}
-
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                                </div>
-
-                                                <div className="p-4">
-                                                    <h3 className="text-white font-semibold text-lg truncate">
-                                                        {film.title}
-                                                    </h3>
-                                                    <div className="absolute top-3 right-3">
-                                                        <Rated movie={film} />
-                                                    </div>
-                                                <div className="flex items-center gap-2 mt-2">
-                                                    <span className="text-white/50 text-sm">
-                                                        {new Date(film.release_date).getFullYear()}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                        <ScrollableCards 
+                            title="Recommandations" 
+                            items={movie.recommendations.results} 
+                            type="movie" 
+                        />
                     </div>
                 </div>
             </main>
