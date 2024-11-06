@@ -20,11 +20,23 @@ const Series: NextPage = () => {
   const [series, setSeries] = useState<Serie[]>([]);
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState<{id: number, name: string}[]>([]);
-  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState<number | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('selectedGenre');
+      return saved ? parseInt(saved) : null;
+    }
+    return null;
+  });
+  const [selectedYear, setSelectedYear] = useState<number | null>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('selectedYear');
+      return saved ? parseInt(saved) : null;
+    }
+    return null;
+  });
 
   // Charge les genres des séries au montage du composant
   useEffect(() => {
@@ -87,8 +99,12 @@ const Series: NextPage = () => {
   const handleGenreChange = (genreId: number | null) => {
     setSeries([]);
     setPage(1);
-    setSelectedYear(null);
     setSelectedGenre(genreId);
+    if (genreId) {
+      localStorage.setItem('selectedGenre', genreId.toString());
+    } else {
+      localStorage.removeItem('selectedGenre');
+    }
   };
 
   // Fonction pour gérer le changement d'année
@@ -96,6 +112,11 @@ const Series: NextPage = () => {
     setSeries([]);
     setPage(1);
     setSelectedYear(year);
+    if (year) {
+      localStorage.setItem('selectedYear', year.toString());
+    } else {
+      localStorage.removeItem('selectedYear');
+    }
   };
 
   // Fonction pour réinitialiser les filtres
@@ -104,6 +125,8 @@ const Series: NextPage = () => {
     setPage(1);
     setSelectedGenre(null);
     setSelectedYear(null);
+    localStorage.removeItem('selectedGenre');
+    localStorage.removeItem('selectedYear');
   };
 
   // Fonction pour gérer la recherche
