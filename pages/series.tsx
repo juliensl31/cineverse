@@ -1,22 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import SeoMetadata from '../components/SeoMetadata';
-import MovieCard from '../components/MovieCard';
+import SerieCard from '../components/SerieCard';
 import Spinner from '../components/Spinner';
 import SearchBar from '../components/SearchBar';
 import Link from 'next/link';
 
-// Interface pour définir la structure d'un film
-interface Movie {
-  id: number; // Identifiant unique du film
-  title: string; // Titre du film
-  poster_path: string; // Chemin de l'affiche du film
-  release_date: string; // Date de sortie du film
-  vote_average: number; // Note moyenne du film
+// Interface pour définir la structure d'une série
+interface Serie {
+  id: number; // Identifiant unique de la série
+  name: string; // titre de la série
+  poster_path: string; // chemin de l'affiche de la série
+  overview: string; // résumé de la série
+  first_air_date: string; // date de première diffusion de la série
+  vote_average: number; // note moyenne de la série
 }
-// Composant pour la page des films
-const Movies: NextPage = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+
+const Series: NextPage = () => {
+  const [series, setSeries] = useState<Serie[]>([]);
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState<{id: number, name: string}[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
@@ -25,12 +26,12 @@ const Movies: NextPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Charge les genres des films au montage du composant
+  // Charge les genres des séries au montage du composant
   useEffect(() => {
     const fetchGenres = async () => {
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR`
+          `https://api.themoviedb.org/3/genre/tv/list?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR`
         );
         const data = await response.json();
         setGenres(data.genres);
@@ -41,8 +42,8 @@ const Movies: NextPage = () => {
     fetchGenres();
   }, []);
 
-  // Fonction pour récupérer les films selon les filtres
-  const fetchMovies = useCallback(async (genre?: number) => {
+  // Fonction pour récupérer les séries selon les filtres
+  const fetchSeries = useCallback(async (genre?: number) => {
     if (!page) return;
     
     const isFirstLoad = page === 1;
@@ -51,14 +52,14 @@ const Movies: NextPage = () => {
     try {
       // Construction de l'URL avec les paramètres de filtrage
       const yearParam = selectedYear ? `&primary_release_year=${selectedYear}` : '';
-      const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&include_adult=false${yearParam}${genre ? `&with_genres=${genre}` : ''}&page=${page}`;
+      const url = `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&include_adult=false${yearParam}${genre ? `&with_genres=${genre}` : ''}&page=${page}`;
       
       const response = await fetch(url);
       const data = await response.json();
       
       // Mise à jour des films selon si c'est un premier chargement ou "charger plus"
-      setMovies(prevMovies => 
-        isFirstLoad ? data.results : [...prevMovies, ...data.results]
+      setSeries(prevSeries => 
+        isFirstLoad ? data.results : [...prevSeries, ...data.results]
       );
       setTotalPages(data.total_pages);
 
@@ -72,10 +73,10 @@ const Movies: NextPage = () => {
 
   // Déclencher la récupération des films quand le genre sélectionné change
   useEffect(() => {
-    fetchMovies(selectedGenre || undefined);
-  }, [selectedGenre, fetchMovies]);
+    fetchSeries(selectedGenre || undefined);
+  }, [selectedGenre, fetchSeries]);
 
-  // Fonction pour charger plus de films
+  // Fonction pour charger plus de séries
   const loadMore = () => {
     if (page < totalPages) {
       setPage(prev => prev + 1);
@@ -84,7 +85,7 @@ const Movies: NextPage = () => {
 
   // Fonction pour gérer le changement de genre
   const handleGenreChange = (genreId: number | null) => {
-    setMovies([]);
+    setSeries([]);
     setPage(1);
     setSelectedYear(null);
     setSelectedGenre(genreId);
@@ -92,14 +93,14 @@ const Movies: NextPage = () => {
 
   // Fonction pour gérer le changement d'année
   const handleYearChange = (year: number | null) => {
-    setMovies([]);
+    setSeries([]);
     setPage(1);
     setSelectedYear(year);
   };
 
   // Fonction pour réinitialiser les filtres
   const handleReset = () => {
-    setMovies([]);
+    setSeries([]);
     setPage(1);
     setSelectedGenre(null);
     setSelectedYear(null);
@@ -107,14 +108,14 @@ const Movies: NextPage = () => {
 
   // Fonction pour gérer la recherche
   const handleSearch = async (query: string, type: string) => {
-    setMovies([]);
+    setSeries([]);
     setPage(1);
     try {
       const response = await fetch(
         `https://api.themoviedb.org/3/search/${type}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&query=${query}`
       );
       const data = await response.json();
-      setMovies(data.results);
+      setSeries(data.results);
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -124,8 +125,8 @@ const Movies: NextPage = () => {
     <>
         {/* Métadonnées SEO */}
       <SeoMetadata 
-        title="Films | CinéVerse"
-        description="Découvrez notre catalogue complet de films"
+        title="Séries | CinéVerse"
+        description="Découvrez notre catalogue complet de séries"
         image="/movie-icon.png"
       />
 
@@ -137,7 +138,7 @@ const Movies: NextPage = () => {
               <span className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text 
                 bg-gradient-to-r from-purple-500 via-pink-400 to-purple-500 
                 animate-gradient-x tracking-tight leading-tight">
-                Catalogue des Films
+                Catalogue des Séries
               </span>
               
               {/* Ligne décorative */}
@@ -146,14 +147,14 @@ const Movies: NextPage = () => {
                 rounded-full blur-sm opacity-80"></span>
             </h1>
             <p className="mt-8 text-lg text-gray-300 max-w-2xl mx-auto">
-              Explorez notre sélection de films et trouvez votre prochaine aventure cinématographique
+              Explorez notre sélection de séries et trouvez votre prochaine aventure cinématographique
             </p>
           </div>
 
             {/* Barre de recherche et filtres */}
             <div className="sticky top-0 z-50 bg-primary mb-8 py-4 ">
                 <div className='mb-8'>
-              <SearchBar onSearch={(query: string) => handleSearch(query, 'movie')} />
+              <SearchBar onSearch={(query: string) => handleSearch(query, 'tv')} />
                 </div>
        
             <div className="flex justify-center gap-4">
@@ -233,14 +234,14 @@ const Movies: NextPage = () => {
           ) : (
             // Grille de films
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+              {series.map((series) => (
+                <SerieCard key={series.id} series={series} />
               ))}
             </div>
           )}
 
           {/* Bouton "Charger plus" */}
-          {!loading && !isLoadingMore && page < totalPages && movies.length > 0 && (
+          {!loading && !isLoadingMore && page < totalPages && series.length > 0 && (
             <div className="text-center mt-8">
               <button
                 onClick={loadMore}
@@ -252,7 +253,7 @@ const Movies: NextPage = () => {
           )}
 
           {/* Message si aucun film trouvé */}
-          {!loading && movies.length === 0 && (
+          {!loading && series.length === 0 && (
             <div className="text-center mt-8 text-gray-400">
               Aucun film trouvé pour ces critères
             </div>
@@ -263,4 +264,4 @@ const Movies: NextPage = () => {
   );
 };
 
-export default Movies;
+export default Series;

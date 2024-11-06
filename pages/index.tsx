@@ -137,7 +137,7 @@ const Home: NextPage = () => {
             <div className="flex justify-center mt-8">
               <Link 
                 href="/movies" 
-                className="btn-gradient inline-flex items-center justify-center gap-2 px-6 h-12 rounded-xl mb-8">
+                className="btn-gradient inline-flex items-center justify-center gap-2 px-6 h-12 rounded-xl mb-8 w-full">
                 <span className="text-white text-base font-medium">Voir tous les films</span>
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -155,6 +155,16 @@ const Home: NextPage = () => {
               {series.map((series) => (
                 <SerieCard key={series.id} series={series} />
               ))}
+            </div>
+            <div className="flex justify-center mt-8">
+              <Link 
+                href="/series" 
+                className="btn-gradient inline-flex items-center justify-center gap-2 px-6 h-12 rounded-xl mb-8 w-full">
+                <span className="text-white text-base font-medium">Voir toutes les séries</span>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
             </div>
           </section>
         </div>
