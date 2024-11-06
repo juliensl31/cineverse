@@ -6,6 +6,7 @@ import Navigation from '../../components/Navigation';
 import ScrollableCards from '../../components/ScrollableCards';
 import SeoMetadata from '../../components/SeoMetadata';
 import WikipediaExtract from '../../components/WikipediaExtract';
+import AgeRating from '../../components/AgeRating';
 
 //Interface décrivant la structure des données d'une série
 interface SerieDetails {
@@ -185,6 +186,8 @@ export default function SeriePage() {
                                 <div className="flex flex-wrap items-center gap-6 text-lg mb-8">
                                     {/* Badge de note */}
                                     <Rated movie={serie} />
+                                    {/* Classification d'âge */}
+                                    <AgeRating id={serie.id} type="tv" />
                                     {/* Date de première diffusion */}
                                     <span>{new Date(serie.first_air_date).getFullYear()}</span>
                                     {/* Nombre de saisons */}
@@ -213,8 +216,11 @@ export default function SeriePage() {
                                 />
                                 
                                 {/* Équipe de réalisation */}
-                                <div className='bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 mt-6'>
-                                    <h2 className='text-xl font-bold mb-3'>Réalisation</h2>
+                                {serie.credits.crew
+                                    .filter(member => ['Director', 'Producer', 'Screenplay'].includes(member.job))
+                                    .length > 0 && (
+                                        <div className='bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 mt-6'>
+                                            <h2 className='text-xl font-bold mb-3'>Réalisation</h2>
                                     <div className='flex flex-wrap gap-x-6 gap-y-2'>
                                         {serie.credits.crew
                                             .filter(member => ['Director', 'Producer', 'Screenplay'].includes(member.job))
@@ -234,7 +240,8 @@ export default function SeriePage() {
                                                 </div>
                                             ))}
                                     </div>
-                                </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

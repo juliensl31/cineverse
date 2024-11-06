@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import Rated from './Rated';
+import AgeRating from './AgeRating';
 
 // Props pour le composant MovieCard
 interface MovieCardProps {
@@ -49,15 +50,22 @@ const MovieCard = ({ movie }: MovieCardProps) => {
         </div>
       </div>
 
-      {/* Titre et année de sortie */}
-      <div className="mt-4 px-1 space-y-1">
-        <h3 className="font-semibold text-lg leading-tight line-clamp-1 
-          group-hover:text-purple-600 transition-colors duration-300">
-          {movie.title}
-        </h3>
+      {/* Titre, année de sortie et classification d'âge */}
+      <div className="mt-4 px-1">
+        {/* Titre */}
+        <div className="flex items-center gap-2">
+          <h3 className="flex-1 font-semibold text-lg leading-tight line-clamp-1 
+            group-hover:text-purple-600 transition-colors duration-300">
+            {movie.title}
+          </h3>
+          {/* Classification d'âge */}
+          <div className="flex-shrink-0">
+            <AgeRating id={movie.id} type="movie" />
+          </div>
+        </div>
         {/* Année de sortie */}
         <span className="text-sm text-gray-500 font-medium transform origin-left 
-          group-hover:scale-105 transition-transform duration-300">
+          group-hover:scale-105 transition-transform duration-300 block mt-1">
           {new Date(movie.release_date).getFullYear()}
         </span>
       </div>

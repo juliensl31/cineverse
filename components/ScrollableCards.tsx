@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import Rated from './Rated';
+import AgeRating from './AgeRating';
 
 // Interface pour les cartes de base
 interface BaseCard {
@@ -128,6 +129,12 @@ const ScrollableCards = ({ title, items, type, limit = 15 }: ScrollableCardsProp
                     {(type === 'movie' || type === 'tv') && item.vote_average && (
                       <div className="absolute top-3 right-3">
                         <Rated movie={{ vote_average: item.vote_average }} />
+                      </div>
+                    )}
+                    {/* Classification d'âge */}
+                    {(type === 'movie' || type === 'tv') && item.id && (
+                      <div className="flex-shrink-0">
+                        <AgeRating id={item.id} type={type} />
                       </div>
                     )}
                   </div>
