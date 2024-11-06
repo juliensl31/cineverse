@@ -22,16 +22,22 @@ const SeriesCard = ({ series }: SeriesProps) => {
           onClick={() => router.push(`/serie/${series.id}`)}
         >
           {/* Poster du film avec effets au survol */}
-          <div className="relative overflow-hidden rounded-xl shadow-md transition-all duration-500 
+          <div className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-md transition-all duration-500 
             hover:shadow-2xl hover:shadow-purple-200/50 hover:-translate-y-2">
             {/* Image du film */}
+            {series.poster_path ? (
             <img
            src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
           alt={series.name}
-              className="w-full aspect-[2/3] object-cover brightness-95 group-hover:brightness-105 
+              className="w-full object-cover brightness-95 group-hover:brightness-105 
                 transition-all duration-500 scale-100 group-hover:scale-110"
               loading="lazy"
-            />
+            /> 
+            ) : (
+              <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                <span className="text-4xl text-white/30">{'📺'}</span>
+              </div>
+            )}
             {/* Filtre de couleur au survol */}
             <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-transparent to-transparent 
               opacity-0 group-hover:opacity-100 transition-opacity duration-500">

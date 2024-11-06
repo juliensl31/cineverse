@@ -51,7 +51,7 @@ const Series: NextPage = () => {
 
     try {
       // Construction de l'URL avec les paramètres de filtrage
-      const yearParam = selectedYear ? `&primary_release_year=${selectedYear}` : '';
+      const yearParam = selectedYear ? `&first_air_date_year=${selectedYear}` : '';
       const url = `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&include_adult=false${yearParam}${genre ? `&with_genres=${genre}` : ''}&page=${page}`;
       
       const response = await fetch(url);

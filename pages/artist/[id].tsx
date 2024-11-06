@@ -157,12 +157,18 @@ const ArtistPage = () => {
             <div className="w-full md:w-1/4">
               {/* Photo */}
               {artist.profile_path ? (
-                <div className="aspect-[2/3] rounded-xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10">
+                <div className="aspect-[2/3] rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10">
+                    {artist.profile_path ? (
                   <img
                     src={`https://image.tmdb.org/t/p/w500${artist.profile_path}`}
                     alt={artist.name}
                     className="w-full h-full object-cover"
                   />
+                  ) : (
+                    <div className="w-full h-full rounded-2xl bg-gray-800 flex items-center justify-center">
+                      <span className="text-4xl text-white/30">👤</span>
+                    </div>
+                  )}
                 </div>
               ) : (
                 // Si l'artiste n'a pas de photo, afficher un placeholder

@@ -165,11 +165,17 @@ export default function SeriePage() {
                         {/* En-tête */}
                         <div className="flex flex-col md:flex-row gap-8 mb-12">
                             <div className="w-full md:w-80 flex-shrink-0">
+                                {serie.poster_path ? (
                                 <img
                                     src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
                                     alt={serie.name}
                                     className="w-full rounded-2xl shadow-2xl hover:scale-105 transition-transform duration-300"
                                 />
+                                ) : (
+                                    <div className="w-full h-full rounded-2xl bg-gray-800 flex items-center justify-center">
+                                        <span className="text-4xl text-white/30">{'📺'}</span>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex-1 text-white">
