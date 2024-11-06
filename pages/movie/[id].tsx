@@ -5,6 +5,7 @@ import Rated from '../../components/Rated';
 import Navigation from '../../components/Navigation';
 import SeoMetadata from '../../components/SeoMetadata';
 import ScrollableCards from '../../components/ScrollableCards';
+import WikipediaExtract from '../../components/WikipediaExtract';
 
 //Interface décrivant la structure des données d'un film
  interface MovieDetails {
@@ -201,13 +202,14 @@ export default function MoviePage() {
                                 </div>
 
                                 {/* Synopsis */}
-                                <div className='bg-black/30 p-6 rounded-xl'>
-                                    <h2 className='text-xl font-bold mb-3'>Synopsis</h2>
-                                    <p className='text-gray-300 leading-relaxed'>{movie.overview}</p>
-                                </div>
+                                <WikipediaExtract 
+                                    title={movie.title}
+                                    fallbackDescription={movie.overview}
+                                    type="movie"
+                                />
 
                                 {/* Équipe de réalisation */}
-                                <div className='bg-black/30 p-6 rounded-xl mt-6'>
+                                <div className='bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 mt-6'>
                                     <h2 className='text-xl font-bold mb-3'>Réalisation</h2>
                                     <div className='flex flex-wrap gap-x-6 gap-y-2'>
                                         {movie.credits.crew
@@ -215,7 +217,7 @@ export default function MoviePage() {
                                             .map(member => (
                                                 <div 
                                                     key={member.id} 
-                                                    className='text-gray-300 cursor-pointer hover:text-white transition-colors'
+                                                    className='bg-white/5 p-4 rounded-xl text-gray-300 cursor-pointer hover:text-white transition-colors'
                                                     onClick={() => router.push(`/artist/${member.id}`)}
                                                 >
                                                     <span className='text-white font-medium'>{member.name}</span>

@@ -5,6 +5,7 @@ import Spinner from '../../components/Spinner';
 import { FaInstagram, FaTwitter, FaTiktok, FaYoutube, FaGlobe } from 'react-icons/fa';
 import ScrollableCards from '../../components/ScrollableCards';
 import Navigation from '../../components/Navigation';
+import WikipediaExtract from '../../components/WikipediaExtract';
 
 // Ajouter cette fonction utilitaire en haut du fichier
 const calculateAge = (birthday: string, deathday: string | null): string => {
@@ -318,16 +319,11 @@ const ArtistPage = () => {
               </div>
 
               {/* Biographie */}
-              {artist.biography && (
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-                  <h2 className="text-2xl font-bold mb-4 text-white">
-                    Biographie
-                  </h2>
-                  <p className="text-white/80 leading-relaxed whitespace-pre-line">
-                    {artist.biography}
-                  </p>
-                </div>
-              )}
+              <WikipediaExtract 
+                title={artist.name}
+                fallbackDescription={artist.biography}
+                type="artist"
+              />
             </div>
           </div>
 
