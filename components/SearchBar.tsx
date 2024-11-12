@@ -94,7 +94,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
 
   return (
     // Structure du composant
-    <div className="w-full max-w-3xl mx-auto relative group">
+    <div className="max-w-3xl mx-auto">
       {/* Formulaire de recherche avec icône et champ de saisie */}
       <form onSubmit={handleSubmit}>
         <div className="relative flex items-center">

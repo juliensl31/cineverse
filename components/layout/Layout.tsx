@@ -1,6 +1,6 @@
 import React from 'react';
 import Footer from './Footer';
-
+import Navigation from '../Navigation';
 // Props pour le composant Layout
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,12 +8,16 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div>
+    <div className="h-screen flex flex-col bg-gradient-to-b from-gray-900 to-black text-white p-2">
+      {/* Navigation */}
+      <Navigation/>
       {/* Conteneur principal */}
-      <main>{children}</main>
+      <main className="flex-1 overflow-y-auto">
+        {children}
+      </main>
       {/* Pied de page */}
-      <Footer />
-    </div>
+      <Footer/>
+      </div>
   );
 };
 

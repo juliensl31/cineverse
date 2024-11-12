@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Spinner from '../../components/Spinner';
 import Rated from '../../components/Rated';
-import Navigation from '../../components/Navigation';
 import SeoMetadata from '../../components/SeoMetadata';
 import ScrollableCards from '../../components/ScrollableCards';
 import WikipediaExtract from '../../components/WikipediaExtract';
 import AgeRating from '../../components/AgeRating';
-
+import ShareButton from '../../components/ShareButton';
 //Interface décrivant la structure des données d'un film
  interface MovieDetails {
     id: number;              // Identifiant unique du film
@@ -118,9 +117,7 @@ export default function MoviePage() {
     // Affichage du loader pendant le chargement
     if (loading) {
         return (
-            <div className="fixed inset-0 flex items-center justify-center bg-black">
-                <Spinner />
-            </div>
+            <Spinner />  
         );
     }
 
@@ -135,30 +132,25 @@ export default function MoviePage() {
                 description={movie.overview}
                 image={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`}
             />
-
-            {/* Barre de navigation */}
-            <Navigation />
-
             {/* Contenu principal */}
-            <main className="relative min-h-screen w-full">
+            <main className="relative min-h-screen">
                 {/* Background dynamique */}
-                <div className="fixed inset-0 -z-10">
-                    <div className="absolute inset-0 w-screen h-screen">
-                        <img
-                            src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-                            alt=""
-                            className="w-full h-full object-cover animate-fade-in"
-                        />
-                        <div className="absolute inset-0 bg-black/20" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
-                        <div className="absolute inset-0"
-                            style={{
-                                background: 'radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.8) 100%)'
-                            }}
-                        />
+                <div className="fixed inset-0">
+                <div className="absolute inset-0 w-screen h-screen">
+                    <img
+                        src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+                        alt=""
+                        className="w-full h-full object-cover animate-fade-in"
+                    />
+                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
+                    <div className="absolute inset-0"
+                        style={{
+                            background: 'radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.8) 100%)'
+                        }}
+                    />
                     </div>
                 </div>
-
                 {/* Contenu */}
                 <div className="relative z-10 container mx-auto px-12 py-36">
                     <div className="bg-black/40 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-xl border border-white/10">
@@ -179,8 +171,10 @@ export default function MoviePage() {
                             </div>
 
                             <div className="flex-1 text-white">
-                                <h1 className="text-4xl md:text-5xl font-bold mb-6">{movie.title}</h1>
-
+                            <div className="flex justify-between items-start mb-6">
+                                <h1 className="text-4xl md:text-5xl font-bold">{movie.title}</h1>
+                                    <ShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}/movie/${movie.id}`} title={movie.title} />
+                                </div>
                                 <div className="flex flex-wrap items-center gap-6 text-lg mb-8">
                                     {/* Badge de note */}
                                     <Rated movie={movie} />

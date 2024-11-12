@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Spinner from '../../components/Spinner';
 import Rated from '../../components/Rated';
-import Navigation from '../../components/Navigation';
 import ScrollableCards from '../../components/ScrollableCards';
 import SeoMetadata from '../../components/SeoMetadata';
 import WikipediaExtract from '../../components/WikipediaExtract';
 import AgeRating from '../../components/AgeRating';
+import ShareButton from '../../components/ShareButton';
 
 //Interface décrivant la structure des données d'une série
 interface SerieDetails {
@@ -137,14 +137,10 @@ export default function SeriePage() {
                 description={serie.overview}
                 image={`https://image.tmdb.org/t/p/w1280${serie.backdrop_path}`}
             />
-
-            {/* Barre de navigation */}
-            <Navigation />
-
             {/* Contenu principal */}
             <main className="relative min-h-screen w-full">
                 {/* Background dynamique */}
-                <div className="fixed inset-0 -z-10">
+                <div className="fixed inset-0">
                     <div className="absolute inset-0 w-screen h-screen">
                         <img
                             src={`https://image.tmdb.org/t/p/original${serie.backdrop_path}`}
@@ -181,8 +177,10 @@ export default function SeriePage() {
                             </div>
 
                             <div className="flex-1 text-white">
-                                <h1 className="text-4xl md:text-5xl font-bold mb-6">{serie.name}</h1>
-
+                                <div className="flex justify-between items-start mb-6">
+                                    <h1 className="text-4xl md:text-5xl font-bold">{serie.name}</h1>
+                                    <ShareButton url={`${process.env.NEXT_PUBLIC_BASE_URL}/serie/${serie.id}`} title={serie.name} />
+                                </div>
                                 <div className="flex flex-wrap items-center gap-6 text-lg mb-8">
                                     {/* Badge de note */}
                                     <Rated movie={serie} />

@@ -4,7 +4,6 @@ import SeoMetadata from '../components/SeoMetadata';
 import SerieCard from '../components/SerieCard';
 import Spinner from '../components/Spinner';
 import SearchBar from '../components/SearchBar';
-import Link from 'next/link';
 
 // Interface pour définir la structure d'une série
 interface Serie {
@@ -148,20 +147,20 @@ const Series: NextPage = () => {
     <>
         {/* Métadonnées SEO */}
       <SeoMetadata 
-        title="Séries | CinéVerse"
+        title="Séries"
         description="Découvrez notre catalogue complet de séries"
         image="/movie-icon.png"
       />
 
-      <main className="min-h-screen bg-primary text-white p-8">
-        <div className="container mx-auto">
+      <main>
+        <div className="container mx-auto mt-20">
           {/* En-tête de la page */}
           <div className="text-center mb-12">
             <h1 className="relative inline-block">
               <span className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text 
                 bg-gradient-to-r from-purple-500 via-pink-400 to-purple-500 
                 animate-gradient-x tracking-tight leading-tight">
-                Catalogue des Séries
+                Séries
               </span>
               
               {/* Ligne décorative */}
@@ -175,21 +174,12 @@ const Series: NextPage = () => {
           </div>
 
             {/* Barre de recherche et filtres */}
-            <div className="sticky top-0 z-50 bg-primary mb-8 py-4 ">
+            <div className="mb-8 py-4 ">
                 <div className='mb-8'>
               <SearchBar onSearch={(query: string) => handleSearch(query, 'tv')} />
                 </div>
        
             <div className="flex justify-center gap-4">
-
-                {/* Lien Accueil - Redirige vers la page d'accueil */}
-                <Link href="/" aria-label="Accueil" className="btn-gradient flex items-center justify-center gap-2 px-4 h-10 rounded-xl ">
-                    {/* Icône maison */}
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    <span className="text-white text-sm font-medium">Accueil</span>
-                </Link>
 
               {/* Filtre de genre */}
               <select

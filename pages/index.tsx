@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import SeoMetadata from '../components/SeoMetadata';
 import Spinner from '../components/Spinner';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import MovieCard from '../components/MovieCard';
 import SearchBar from '../components/SearchBar';
 import SerieCard from '../components/SerieCard';
@@ -31,36 +31,11 @@ interface Serie {
 type SearchType = 'movie' | 'tv' | 'person';
 
 // Composant principal de la page d'accueil
-const Home: NextPage = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [series, setSeries] = useState<Serie[]>([]);
-  const [loading, setLoading] = useState(true);
+const Home: NextPage<{ initialMovies: Movie[]; initialSeries: Serie[] }> = ({ initialMovies, initialSeries }) => {
+  const [movies, setMovies] = useState<Movie[]>(initialMovies);
+  const [series, setSeries] = useState<Serie[]>(initialSeries);
+  const [loading, setLoading] = useState(false);
 
-  // Charge les films à l'affiche au montage du composant
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [moviesResponse, sciFiFantasyResponse] = await Promise.all([
-          fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&page=1`),
-          fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&sort_by=popularity.desc&with_genres=10765&page=1`)
-        ]);
-        // Récupérer les données des films et des séries
-        const [moviesData, seriesData] = await Promise.all([
-          moviesResponse.json(),
-          sciFiFantasyResponse.json()
-        ]);
-        // Récupérer les 10 premiers films et séries
-        setMovies(moviesData.results.slice(0, 10));
-        setSeries(seriesData.results.slice(0, 10));
-      } catch (error) {
-        console.error('Erreur:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
   // Fonction pour rechercher des films ou séries
   const handleSearch = async (query: string, type: SearchType) => {
     setLoading(true);
@@ -94,7 +69,7 @@ const Home: NextPage = () => {
       />
 
       {/* Conteneur principal */}
-      <main className="min-h-screen h-full w-full p-4 bg-primary text-white">
+      <main className="h-full w-full p-4">
       <div className='container mx-auto px-4 py-12 min-h-screen'>
           {/* Titre et description */}
           <div className="text-center space-y-6 mb-16">
@@ -113,9 +88,8 @@ const Home: NextPage = () => {
           </div>
         
       {/* SearchBar */}
-      <div className="sticky top-0 z-50 bg-primary py-4">
+      
         <SearchBar onSearch={(query: string) => handleSearch(query, 'movie')} />
-      </div>
 
       {/* Affiche un spinner pendant le chargement, sinon la grille de films */}
       {loading ? (
@@ -173,6 +147,34 @@ const Home: NextPage = () => {
       </main>
     </>
   )
+}
+
+export async function getServerSideProps() {
+  try {
+    const [moviesResponse, sciFiFantasyResponse] = await Promise.all([
+      fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&page=1`),
+      fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&sort_by=popularity.desc&with_genres=10765&page=1`)
+    ]);
+
+    const [moviesData, seriesData] = await Promise.all([
+      moviesResponse.json(),
+      sciFiFantasyResponse.json()
+    ]);
+
+    return {
+      props: {
+        initialMovies: moviesData.results.slice(0, 10),
+        initialSeries: seriesData.results.slice(0, 10)
+      }
+    };
+  } catch (error) {
+    return {
+      props: {
+        initialMovies: [],
+        initialSeries: []
+      }
+    };
+  }
 }
 
 export default Home

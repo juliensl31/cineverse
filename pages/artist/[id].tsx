@@ -4,7 +4,6 @@ import SeoMetadata from '../../components/SeoMetadata';
 import Spinner from '../../components/Spinner';
 import { FaInstagram, FaTwitter, FaTiktok, FaYoutube, FaGlobe } from 'react-icons/fa';
 import ScrollableCards from '../../components/ScrollableCards';
-import Navigation from '../../components/Navigation';
 import WikipediaExtract from '../../components/WikipediaExtract';
 
 // Ajouter cette fonction utilitaire en haut du fichier
@@ -144,11 +143,7 @@ const ArtistPage = () => {
         description={artist.biography}
         image={`https://image.tmdb.org/t/p/w1280${artist.profile_path}`}
       />
-
-      {/* Barre de navigation */}
-      <Navigation />
-
-      <main className="min-h-screen bg-[#030014]">
+      <main>
         <div className="relative z-10 container mx-auto px-12 py-36">
         <div className="bg-black/40 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-xl border border-white/10">
 

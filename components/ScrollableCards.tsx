@@ -35,7 +35,7 @@ const ScrollableCards = ({ title, items, type, limit = 15 }: ScrollableCardsProp
 
   // Fonction pour obtenir le nom de l'élément
   const getName = (item: BaseCard) => {
-    if (type === 'movie') return item.title;
+    if (type === 'movie' || type === 'tv') return item.title;
     return item.name;
   };
 
