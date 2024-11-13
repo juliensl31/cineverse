@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Spinner from '../../components/Spinner';
-import Rated from '../../components/Rated';
-import ScrollableCards from '../../components/ScrollableCards';
+import Spinner from '../../components/UI/Spinner';
+import Rated from '../../components/Card/Rated';
+import ScrollableCards from '../../components/UI/ScrollableCards';
 import SeoMetadata from '../../components/SeoMetadata';
-import WikipediaExtract from '../../components/WikipediaExtract';
-import AgeRating from '../../components/AgeRating';
-import ShareButton from '../../components/ShareButton';
+import WikipediaExtract from '../../components/Card/WikipediaExtract';
+import AgeRating from '../../components/Card/AgeRating';
+import ShareButton from '../../components/Card/ShareButton';
 
 //Interface décrivant la structure des données d'une série
 interface SerieDetails {
@@ -120,9 +120,7 @@ export default function SeriePage() {
     // Affichage du loader pendant le chargement
     if (loading) {
         return (
-            <div className="fixed inset-0 flex items-center justify-center bg-black">
-                <Spinner />
-            </div>
+            <Spinner />
         );
     }
 

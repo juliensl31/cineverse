@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/UI/Spinner';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/router';
@@ -156,7 +156,7 @@ const AuthPage: NextPage = () => {
         
         <div>
             {isLoading ? (
-                    <Spinner/>
+                <Spinner />
             ) : (
                 <>
                 {/* Métadonnées SEO */}

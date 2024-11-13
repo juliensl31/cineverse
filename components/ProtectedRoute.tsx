@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
 import { ReactNode } from 'react';
-import Spinner from './Spinner';
+import Spinner from './UI/Spinner';
 
 // Interface définissant les props du composant
 interface ProtectedRouteProps {
@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
     // Affichage d'un état de chargement pendant la vérification de l'auth
     if (loading) {
-        return <Spinner/>;
+        return <Spinner />;
     }
 
     // Redirection vers la page de login si l'utilisateur n'est pas connecté

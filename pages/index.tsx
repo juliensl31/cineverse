@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
 import SeoMetadata from '../components/SeoMetadata';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/UI/Spinner';
 import { useState } from 'react';
-import MovieCard from '../components/MovieCard';
+import MovieCard from '../components/Card/MovieCard';
 import SearchBar from '../components/SearchBar';
-import SerieCard from '../components/SerieCard';
+import SerieCard from '../components/Card/SerieCard';
 import Link from 'next/link';
 
 //Interface pour les données de films reçues de l'API TMDB
@@ -93,9 +93,7 @@ const Home: NextPage<{ initialMovies: Movie[]; initialSeries: Serie[] }> = ({ in
 
       {/* Affiche un spinner pendant le chargement, sinon la grille de films */}
       {loading ? (
-        <div className="flex justify-center mt-12">
-          <Spinner />
-        </div>
+        <Spinner />
       ) : (
         <div className="space-y-24 mt-16">
           {/* Section Films */}

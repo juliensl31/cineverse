@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import SeoMetadata from '../../components/SeoMetadata';
-import Spinner from '../../components/Spinner';
+import Spinner from '../../components/UI/Spinner';
 import { FaInstagram, FaTwitter, FaTiktok, FaYoutube, FaGlobe } from 'react-icons/fa';
-import ScrollableCards from '../../components/ScrollableCards';
-import WikipediaExtract from '../../components/WikipediaExtract';
+import ScrollableCards from '../../components/UI/ScrollableCards';
+import WikipediaExtract from '../../components/Card/WikipediaExtract';
 
 // Ajouter cette fonction utilitaire en haut du fichier
 const calculateAge = (birthday: string, deathday: string | null): string => {
@@ -124,9 +124,7 @@ const ArtistPage = () => {
   // Si les données sont en cours de chargement, afficher un spinner
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-primary">
         <Spinner />
-      </div>
     );
   }
 

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import Rated from './Rated';
-import AgeRating from './AgeRating';
+import Rated from '../Card/Rated';
+import AgeRating from '../Card/AgeRating';
 
 // Interface pour les cartes de base
 interface BaseCard {

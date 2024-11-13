@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import SeoMetadata from '../components/SeoMetadata';
 import { useRouter } from 'next/router';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/UI/Spinner';
 
 interface UserProfile {
   username: string;
@@ -52,9 +52,7 @@ const Profile: NextPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center">
         <Spinner />
-      </div>
     );
   }
 

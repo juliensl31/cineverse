@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import SeoMetadata from '../components/SeoMetadata';
-import SerieCard from '../components/SerieCard';
-import Spinner from '../components/Spinner';
+import SerieCard from '../components/Card/SerieCard';
+import Spinner from '../components/UI/Spinner';
 import SearchBar from '../components/SearchBar';
 
 // Interface pour définir la structure d'une série

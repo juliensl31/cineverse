@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Spinner from '../../components/Spinner';
-import Rated from '../../components/Rated';
+import Spinner from '../../components/UI/Spinner';
+import Rated from '../../components/Card/Rated';
 import SeoMetadata from '../../components/SeoMetadata';
-import ScrollableCards from '../../components/ScrollableCards';
-import WikipediaExtract from '../../components/WikipediaExtract';
-import AgeRating from '../../components/AgeRating';
-import ShareButton from '../../components/ShareButton';
+import ScrollableCards from '../../components/UI/ScrollableCards';
+import WikipediaExtract from '../../components/Card/WikipediaExtract';
+import AgeRating from '../../components/Card/AgeRating';
+import ShareButton from '../../components/Card/ShareButton';
 //Interface décrivant la structure des données d'un film
  interface MovieDetails {
     id: number;              // Identifiant unique du film

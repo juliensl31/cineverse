@@ -1,24 +1,29 @@
+/* Importation des styles Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Styles de base */
 @layer base {
   body {
     @apply bg-white text-gray-800;
+    /* Police système par défaut pour une meilleure performance */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 
+  /* Style de focus personnalisé */
+  *:focus {
+    @apply outline-none ring-1 ring-pink-600/40;
+  }
+
+  /* Configuration de la hauteur minimale pour Next.js */
   #__next {
     @apply min-h-screen flex flex-col;
   }
-
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
-  }
 }
 
+/* Animation de dégradé horizontal */
 @keyframes gradient-x {
   0%, 100% {
     background-size: 200% 200%;
@@ -30,22 +35,27 @@
   }
 }
 
+/* Classe pour appliquer l'animation de dégradé */
 .animate-gradient-x {
   animation: gradient-x 8s ease infinite;
 }
 
+/* Utilitaires personnalisés */
 @layer utilities {
+  /* Classes pour masquer la barre de défilement sur différents navigateurs */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
+    -ms-overflow-style: none;  /* IE et Edge */
     scrollbar-width: none;     /* Firefox */
   }
   
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;  /* Chrome, Safari et Opera */
   }
 }
 
+/* Composants personnalisés */
 @layer components {
+  /* Style de bouton avec dégradé et effets de survol */
   .btn-gradient {
     @apply bg-gradient-to-r from-purple-600 to-pink-600
            text-white text-sm font-medium

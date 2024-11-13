@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/router';
+import Spinner from './UI/Spinner';
 
 // Interface pour les résultats de recherche
 // Définit la structure des données retournées par l'API TMDB
@@ -28,6 +29,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fonction de recherche avec debounce pour limiter les appels API
   const debouncedFetch = useCallback(
@@ -94,50 +96,82 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
 
   return (
     // Structure du composant
-    <div className="max-w-3xl mx-auto">
-      {/* Formulaire de recherche avec icône et champ de saisie */}
-      <form onSubmit={handleSubmit}>
-        <div className="relative flex items-center">
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <FiSearch className="h-5 w-5 text-purple-400" />
+    <div className="relative max-w-3xl mx-auto">
+      <div className="flex items-center gap-2">
+        {/* Formulaire de recherche */}
+        <form onSubmit={handleSubmit} className="flex-1">
+          <div className="relative flex items-center">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <FiSearch className="h-5 w-5 text-purple-400" />
+            </div>
+            
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              className="block w-full pl-12 pr-24 py-4 rounded-xl
+                bg-gray-900/50
+                border border-purple-500/20 
+                focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20
+                text-white placeholder-gray-400
+                transition-all duration-300 ease-in-out
+                group-hover:border-purple-500/30
+                shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+              placeholder="Rechercher un film, une série ou un acteur..."
+            />
+            
+            <div className="absolute right-2">
+              {/* Bouton de recherche */}
+              <button 
+                type="submit"
+                className="h-10 px-4 rounded-lg
+                  disabled:opacity-50 disabled:cursor-not-allowed 
+                  btn-gradient"
+                disabled={!searchQuery.trim()}
+              >
+                Rechercher
+              </button>
+            </div>
           </div>
-          
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setShowSuggestions(true);
+        </form>
+
+        {/* Bouton de réinitialisation */}
+        {searchQuery && (
+          <button 
+            type="button"
+            onClick={() => {
+              setIsLoading(true);
+              setSearchQuery('');
+              setSuggestions([]);
+              setShowSuggestions(false);
+                window.location.reload();
             }}
-            onFocus={() => setShowSuggestions(true)}
-            className="block w-full pl-12 pr-24 py-4 rounded-xl
+            disabled={isLoading}
+            className="h-[52px] w-[52px] flex items-center justify-center rounded-xl
               bg-gray-900/50 backdrop-blur-sm
               border border-purple-500/20 
-              focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20
-              text-white placeholder-gray-400
-              transition-all duration-300 ease-in-out
-              group-hover:border-purple-500/30
+              hover:border-purple-500/50 hover:bg-gray-800/50
+              text-gray-400 hover:text-white
+              transition-all duration-300
               shadow-[0_0_20px_rgba(168,85,247,0.15)]"
-            placeholder="Rechercher un film, une série ou un acteur..."
-          />
-          
-          <button 
-            type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2
-              h-10 px-4 rounded-lg
-              disabled:opacity-50 disabled:cursor-not-allowed 
-              btn-gradient"
-            disabled={!searchQuery.trim()}
+            aria-label="Réinitialiser la recherche"
           >
-            Rechercher
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            {isLoading && <Spinner />}
           </button>
-        </div>
-      </form>
+        )}
+      </div>
 
       {/* Liste déroulante des suggestions 
           Affichée uniquement si showSuggestions est true et qu'il y a des suggestions */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute w-full mt-2 bg-gray-900/90 backdrop-blur-md 
+        <div className="absolute left-0 right-[60px] mt-2 bg-gray-900/90 backdrop-blur-md 
           border border-purple-500/20 rounded-xl z-50
           shadow-[0_0_20px_rgba(0,0,0,0.2)]">
           {/* Mapping des suggestions pour créer les éléments de la liste */}
