@@ -1,10 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  basePath: '/cineverse',
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/cineverse',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     unoptimized: true,
   },
+  output: 'export',
 
   // Désactive le spinner Vercel
   devIndicators: {
