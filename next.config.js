@@ -5,7 +5,7 @@ const nextConfig = {
     buildActivity: false
   },
   output: 'export',
-  basePath:'/',
+  basePath:'/cineverse',
   images: {
     unoptimized: true,
   },
