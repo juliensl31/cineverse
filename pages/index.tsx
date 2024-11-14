@@ -6,6 +6,7 @@ import MovieCard from '../components/Card/MovieCard';
 import SearchBar from '../components/SearchBar';
 import SerieCard from '../components/Card/SerieCard';
 import Link from 'next/link';
+import routes from '../lib/routes';
 
 //Interface pour les données de films reçues de l'API TMDB
 interface Movie {
@@ -108,7 +109,7 @@ const Home: NextPage<{ initialMovies: Movie[]; initialSeries: Serie[] }> = ({ in
             </div>
             <div className="flex justify-center mt-8">
               <Link 
-                href="/movies" 
+                href={routes.movies} 
                 className="btn-gradient inline-flex items-center justify-center gap-2 px-6 h-12 rounded-xl mb-8 w-full">
                 <span className="text-white text-base font-medium">Voir tous les films</span>
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +131,7 @@ const Home: NextPage<{ initialMovies: Movie[]; initialSeries: Serie[] }> = ({ in
             </div>
             <div className="flex justify-center mt-8">
               <Link 
-                href="/series" 
+                href={routes.series}
                 className="btn-gradient inline-flex items-center justify-center gap-2 px-6 h-12 rounded-xl mb-8 w-full">
                 <span className="text-white text-base font-medium">Voir toutes les séries</span>
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
