@@ -1,6 +1,7 @@
 {
   "name": "cineverse",
   "version": "1.0.0",
+  "homepage": "https://juliensl31.github.io/cineverse",
   "private": true,
   "dependencies": {
     "@firebase/auth": "^1.8.0",
@@ -29,7 +30,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
   },
   "eslintConfig": {
     "extends": [
