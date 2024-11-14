@@ -1,5 +1,6 @@
 {
   "name": "cineverse",
+  "homepage": "https://juliensl31.github.io/cineverse",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -27,6 +28,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "deploy": "gh-pages -b master -d build",
     "lint": "next lint",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -53,6 +55,7 @@
     "@types/lodash": "^4.17.13",
     "@types/next": "^9.0.0",
     "autoprefixer": "^10.4.20",
+    "gh-pages": "^6.2.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14"
   }
