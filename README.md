@@ -1,46 +1,59 @@
-# Getting Started with Create React App
+# Projet Passerelle #4 (CineVerse)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ce projet est une application web qui permet de rechercher des films, séries ou artistes, et d'obtenir des informations détaillées sur chacun d'eux pour les passionnés de cinéma.
+Utilise l'API de The Movie Database (TMDB) pour récupérer les données.
+Redirection vers Wikipedia pour les détails des films, séries et artistes complémentaires.
 
-## Available Scripts
+## Technologies utilisées
 
-In the project directory, you can run:
+- React / Next.js
+- Tailwind CSS
+- Firebase
+  
+## Description du projet
 
-### `npm start`
+- Une page d'accueil avec …
+  - un menu de navigation pour accéder aux films, aux séries et à une page de connexion/inscription.
+  - un champ de recherche pour rechercher des films, séries et personnages.
+  - les derniers films à l'affiche et les séries à l'affiche avec un bouton "voir plus" pour accéder à la page des films et des séries.
+  - un footer avec le copyright.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Une page de films et une page de séries avec …
+  - un menu de navigation pour accéder aux films ou aux séries en fonction de la page ou on se trouve, retour à la page d'accueil, un retour en arrière et toujours un lien pour accéder à la page de connexion/inscription.
+  - un système de filtres pour filtrer les films ou séries par genre et par année.
+  - un système de pagination pour naviguer entre les pages de films ou séries.
+  - un système de recherche pour rechercher des films ou séries par titre.
+  - les films ou séries sont affichés avec leur affiche, leur titre, leur année de sortie, leur note et l'age approprié.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Une page de détails pour les films et les séries et artistes avec …
+  - la navigation
+  - les détails du film ou de la série avec leur affiche, leur titre, leur année de sortie, leur note, l'age approprié, leur synopsis, leur durée, leur genre, leur bande annonce, l'équipe technique, la distribution, les informations budget et recette ainsi qu'une liste de recommandations de films et séries similaires.
+  - les détails de l'artiste avec leur photo, leur nom, leur date de naissance,leur age, leur date de décès (si applicable),leur lieu de naissance, leur biographie, leurs films et séries les plus populaires ainsi que leurs réseaux sociaux.
+  - un lien vers la page de détails du film, de la série ou de l'artiste sur Wikipedia (si disponible).
+  - un système de partage.
 
-### `npm test`
+- Une page de connexion/inscription avec …
+  - un formulaire de connexion avec un champ pour l'email, un champ pour le mot de passe et un bouton pour se connecter
+  - un formulaire d'inscription avec un champ pour le nom, un champ pour l'email, un champ pour le mot de passe,un champ pour la confirmation du mot de passe, un bouton pour s'inscrire avec contrôle de validité des champs.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Une page de profil si l'utilisateur est connecté avec …
+  - les informations du profil avec leur nom, leur email.
+  - une section pour les favoris avec les films et séries favoris.
+  - une section pour les films et séries vus.
 
-### `npm run build`
+Si l'utilisateur est connecté, la navigation est modifiée pour permettre l'accès à la page de profil et de déconnexion.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Fonctionnalités non implémentées
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- La fonctionnalité de favoris.
+- La fonctionnalité de films et séries vus.
+- La fonctionnalité de recherche avancée.
+- Modification des informations du profil.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Utilisation
 
-### `npm run eject`
+- Cloner le repository
+- Installer les dépendances avec `npm install`
+- Lancer le projet avec `npm start`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+***Bienvenue dans le CineVerse, votre portail vers le Cinéma !!***
