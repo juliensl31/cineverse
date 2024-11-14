@@ -147,7 +147,7 @@ const Home: NextPage<{ initialMovies: Movie[]; initialSeries: Serie[] }> = ({ in
   )
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   try {
     const [moviesResponse, sciFiFantasyResponse] = await Promise.all([
       fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=fr-FR&page=1`),
