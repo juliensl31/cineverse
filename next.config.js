@@ -1,14 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/cineverse',
-        permanent: true,
-      },
-    ];
-  },
   output: 'export',
   basePath: '/cineverse',
   images: {

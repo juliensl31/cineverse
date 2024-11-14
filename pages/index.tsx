@@ -1,7 +1,8 @@
 import type { NextPage } from 'next'
 import SeoMetadata from '../components/SeoMetadata';
 import Spinner from '../components/UI/Spinner';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import MovieCard from '../components/Card/MovieCard';
 import SearchBar from '../components/SearchBar';
 import SerieCard from '../components/Card/SerieCard';
@@ -33,9 +34,17 @@ type SearchType = 'movie' | 'tv' | 'person';
 
 // Composant principal de la page d'accueil
 const Home: NextPage<{ initialMovies: Movie[]; initialSeries: Serie[] }> = ({ initialMovies, initialSeries }) => {
+  const router = useRouter();
   const [movies, setMovies] = useState<Movie[]>(initialMovies);
   const [series, setSeries] = useState<Serie[]>(initialSeries);
   const [loading, setLoading] = useState(false);
+
+  // Redirection vers la page d'accueil
+  useEffect(() => {
+    if (router.pathname === '/') {
+      router.push(routes.home);
+    }
+  }, [router]);
 
   // Fonction pour rechercher des films ou séries
   const handleSearch = async (query: string, type: SearchType) => {
