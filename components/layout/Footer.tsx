@@ -7,7 +7,16 @@ const Footer = () => {
       <div className="container mx-auto text-center text-white text-sm">
           <p>
             {/* Copyright */}
-            © {new Date().getFullYear()} CineVerse. Tous droits réservés.
+            © {new Date().getFullYear()} CineVerse. Tous droits réservés | 
+            Site réalisé par{' '}
+            <a 
+              href="https://jslcode.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-purple-600 hover:underline font-bold"
+            >
+              JSL Code
+            </a>
           </p>
         </div>
     </footer>

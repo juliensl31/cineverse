@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import SeoMetadata from '../components/SeoMetadata';
 import SerieCard from '../components/Card/SerieCard';
 import Spinner from '../components/UI/Spinner';
@@ -16,6 +17,7 @@ interface Serie {
 }
 
 const Series: NextPage = () => {
+  const router = useRouter();
   const [series, setSeries] = useState<Serie[]>([]);
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState<{id: number, name: string}[]>([]);
@@ -142,6 +144,26 @@ const Series: NextPage = () => {
       console.error('Erreur:', error);
     }
   };
+
+  // Conserver les filtres uniquement si on consulte une serie
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      const isViewingItem = (
+        (router.pathname.startsWith('/series') && url.match(/^\/serie\/\d+/))
+      );
+  
+      if (!isViewingItem) {
+        localStorage.removeItem('selectedGenre');
+        localStorage.removeItem('selectedYear');
+      }
+    };
+  
+    router.events.on('routeChangeStart', handleRouteChange);
+  
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router.events, router.pathname]);
 
   return (
     <>

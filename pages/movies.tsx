@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import SeoMetadata from '../components/SeoMetadata';
 import MovieCard from '../components/Card/MovieCard';
 import Spinner from '../components/UI/Spinner';
@@ -15,6 +16,7 @@ interface Movie {
 }
 // Composant pour la page des films
 const Movies: NextPage = () => {
+  const router = useRouter();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState<{ id: number, name: string }[]>([]);
@@ -142,6 +144,26 @@ const Movies: NextPage = () => {
     }
   };
 
+  // Conserver les filtres uniquement si on consulte un film
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      const isViewingItem = (
+        (router.pathname.startsWith('/movies') && url.match(/^\/movie\/\d+/))
+      );
+  
+      if (!isViewingItem) {
+        localStorage.removeItem('selectedGenre');
+        localStorage.removeItem('selectedYear');
+      }
+    };
+  
+    router.events.on('routeChangeStart', handleRouteChange);
+  
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router.events, router.pathname]);
+
   return (
     <>
       {/* Métadonnées SEO */}
@@ -151,7 +173,7 @@ const Movies: NextPage = () => {
         image="/movie-icon.png"
       />
 
-      <main className="p-8">
+      <main>
         <div className="container mx-auto mt-20">
           {/* En-tête de la page */}
           <div className="text-center mb-12">
