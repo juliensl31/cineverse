@@ -9,7 +9,12 @@ const nextConfig = {
       },
     ];
   },
+  output: 'export',
   basePath: '/cineverse',
+  images: {
+    unoptimized: true,
+  },
+
   // Désactive le spinner Vercel
   devIndicators: {
     buildActivity: false
